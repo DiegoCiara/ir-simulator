@@ -67,14 +67,13 @@ export default function CreateUserModal({
       console.log(response?.status, 'status');
       console.log(response.data);
       if (response.status === 201) {
-        toast.success('Usuário criado com sucesso!');
         await getData();
         await close();
       }
     } catch (error: any) {
       console.error(error);
       toast.error(
-        error.response.data.message ||
+        error?.response?.data?.message ||
           'Não foi possível buscar os usuários tente novamente.',
       );
     } finally {

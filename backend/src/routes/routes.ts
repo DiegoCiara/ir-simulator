@@ -1,6 +1,7 @@
 import Router from 'express';
 import AuthRoutes from './auth.routes';
 import UserRoutes from './user.routes';
+import DeclarationRoutes from './declaration.routes';
 import { ensureAuthenticated } from '@middlewares/ensureAuthenticated';
 
 const routes = Router();
@@ -13,5 +14,6 @@ routes.get('/', (req, res) => {
 
 routes.use('/auth', AuthRoutes);
 routes.use('/user/', ensureAuthenticated, UserRoutes);
+routes.use('/declaration/', DeclarationRoutes);
 
 export default routes;

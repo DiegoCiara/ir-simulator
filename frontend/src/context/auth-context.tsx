@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
         return response
       } catch (error: any) {
         console.error(error)
-        toast.error(`${error.response.data.message}`)
+        toast.error(error?.response?.data?.message)
       }
   }
 

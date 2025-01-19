@@ -91,7 +91,7 @@ export default function Users() {
     } catch (error: any) {
       console.error(error);
       toast.error(
-        error.response.data.message ||
+        error?.response?.data?.message ||
           'Não foi possível buscar os usuários tente novamente.',
       );
     } finally {

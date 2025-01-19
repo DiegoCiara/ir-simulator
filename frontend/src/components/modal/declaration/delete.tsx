@@ -8,38 +8,40 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'react-toastify';
-import { useUser } from '@/context/user-context';
+import { useDeclaration } from '@/context/declaration-context';
 import { useLoading } from '@/context/loading-context';
 import ModalContainer from '..';
-import { User } from '@/types/User';
 import { useEffect, useState } from 'react';
 
-interface DeleteUserModalProps {
+interface DeleteDeclarationModalProps {
   id: string;
   open: boolean;
   close: () => void;
   getData: () => void;
 }
 
-export default function DeleteUserModal({
+interface DeleteDeclaration{
+  year:string
+}
+
+export default function DeleteDeclarationModal({
   open,
   close,
   id,
   getData,
-}: DeleteUserModalProps) {
+}: DeleteDeclarationModalProps) {
   const defaultData = {
-    name: '',
-    email: '',
+    year: '',
   };
   const { onLoading, offLoading } = useLoading();
-  const [data, setData] = useState<User>(defaultData);
+  const [data, setData] = useState<DeleteDeclaration>(defaultData);
 
-  const { getUser, deleteUser } = useUser();
+  const { getDeclaration, deleteDeclaration } = useDeclaration();
 
-  async function fetchUsers() {
+  async function fetchDeclarations() {
     await onLoading();
     try {
-      const { data } = await getUser(id);
+      const { data } = await getDeclaration(id);
       setData(data);
     } catch (error: any) {
       console.error(error);
@@ -53,7 +55,7 @@ export default function DeleteUserModal({
   }
 
   useEffect(() => {
-    fetchUsers();
+    fetchDeclarations();
   }, []);
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function DeleteUserModal({
     e.preventDefault();
     await onLoading();
     try {
-      const response = await deleteUser(id);
+      const response = await deleteDeclaration(id);
       console.log(response?.status, 'status');
       console.log(response.data);
       if (response.status === 200) {
@@ -90,8 +92,7 @@ export default function DeleteUserModal({
             <CardHeader>
               <CardTitle className="font-bold text-red-600">Atenção</CardTitle>
               <CardDescription>
-                Você está deletando o usuário {data.name}, ao confirmar, este
-                usuário não terá mais acesso a plataforma.
+                Você está deletando uma declaração do ano de {data.year}, ao confirmar, esta declaração não ficará mais disponível.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

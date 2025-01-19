@@ -18,8 +18,6 @@ class AuthController {
     try {
       const { email, password }: UserInterface = req.body;
 
-      console.log(req.body);
-
       if (!email || !password) {
         res.status(400).json({ message: 'Valores inválidos para o usuário' });
         return;
@@ -45,7 +43,7 @@ class AuthController {
         name: user.name,
         token,
       });
-      
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Falha na autenticação, tente novamente' });

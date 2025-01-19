@@ -9,6 +9,7 @@ import Users from '@/pages/users.tsx';
 import Account from '@/pages/account.tsx';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from '@/components/navbar/app-sidebar/app-sidebar.tsx';
+import Declarations from '@/pages/declarations.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -23,8 +24,8 @@ export const AppRoute = () => {
       component: Users,
     },
     {
-      path: '/users',
-      component: Users,
+      path: '/declarations',
+      component: Declarations,
     },
     {
       path: '/account',

@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import Declaration from './Declaration';
 
 @Entity({ name: 'users' })
 class User extends BaseEntity {
@@ -21,6 +23,9 @@ class User extends BaseEntity {
 
   @Column()
   passwordHash!: string;
+
+  @OneToMany(() => Declaration, (access) => access.user)
+  declarations!: Declaration[];
 
   @CreateDateColumn()
   createdAt!: Date;
