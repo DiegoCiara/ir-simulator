@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./build",
+    "module": "commonjs",
+    "target": "ESNext",
+    "strict": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "types": ["node", "jest"],
+    "noEmit": false,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "paths": {
+      "@controllers/*": ["./src/app/controllers/*"],
+      "@middlewares/*": ["./src/app/middlewares/*"],
+      "@entities/*": ["./src/app/entities/*"],
+      "@config/*": ["./src/config/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@utils/*": ["src/utils/*"],
+      "@openai/*": ["src/utils/openai/*"],
+      "@src/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "__tests__", "src/app/.ts",],
+  "exclude": ["node_modules"]
+}
+
