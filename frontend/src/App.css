@@ -1,0 +1,62 @@
+
+::-webkit-scrollbar {
+  width: 8px;
+  cursor: auto !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #cacaca15;
+  cursor: auto !important;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+  transition: .3s !important;
+  cursor: auto !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  cursor: auto !important;
+}
+
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--loading-overlay);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.loading-overlay.visible {
+  opacity: 1;
+}
