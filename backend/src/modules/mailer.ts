@@ -1,12 +1,14 @@
 import path from 'path';
 import nodemailer from 'nodemailer';
 import hbs from 'nodemailer-express-handlebars';
-import { host, port, user, pass } from '../config/mail.json';
+
+const user = process.env.SMTP_EMAIL
+const pass = process.env.SMTP_PASS
 
 const transport = nodemailer.createTransport({
-  // service: 'gmail',
-  host,
-  port,
+  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
   secure: true,
   auth: {
     user,
@@ -15,7 +17,7 @@ const transport = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false,
   }
-}); 
+});
 
 transport.use(
   'compile',
@@ -24,7 +26,7 @@ transport.use(
       defaultLayout: undefined,
       partialsDir: path.resolve('./src/resources/mail/'),
     },
-    viewPath: path.resolve('./src/resources/mail/'), // resolve parte sempre da raiz absoluta do projeto.
+    viewPath: path.resolve('./src/resources/mail/'),
     extName: '.html',
   })
 );

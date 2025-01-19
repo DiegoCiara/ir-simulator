@@ -6,10 +6,10 @@ export const api = axios.create({
   baseURL: baseURL,
 });
 
-// Adicionar um interceptor para incluir o token no cabeçalho
+
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("enduranceToken");
+    const token = sessionStorage.getItem("@ir-simulator:token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -21,23 +21,17 @@ api.interceptors.request.use(
 );
 
 
-// Adicionar um interceptor de resposta para capturar o erro "No Token Valid"
 api.interceptors.response.use(
   (response) => {
-    // Se a resposta for bem sucedida, simplesmente a retorne
     return response;
   },
   (error) => {
-    // Verifique se há uma resposta do servidor
     if (error.response) {
-      // Verifique se a mensagem de erro é "No Token Valid"
       if (error.response.data.message === "Token invalid") {
-        // Remova o token inválido do sessionStorage
-        sessionStorage.removeItem("enduranceToken");
-        window.location.href = "/login"; // Ou use o useNavigate se estiver no contexto de um componente
+        sessionStorage.removeItem("@ir-simulator:token");
+        window.location.href = "/login";
       }
     }
-    // Retorne a Promise de rejeição com o erro para ser tratado onde for necessário
     return Promise.reject(error);
   }
 );

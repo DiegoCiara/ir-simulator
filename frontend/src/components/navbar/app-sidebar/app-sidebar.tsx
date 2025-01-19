@@ -7,10 +7,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { Navigation } from './navigation';
 import { useAuth } from '@/context/auth-context';
-import { NavUser } from './nav-user';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Navigation } from '../navigation/navigation';
+import { NavUser } from './nav-user/nav-user';
 
 export function AppSidebar({ ...props }) {
   const { user } = useAuth();
@@ -21,8 +21,7 @@ export function AppSidebar({ ...props }) {
     return (
       <Sidebar {...props}>
         <SidebarHeader>
-          <h1 className='text-[2rem] text-center
-          '>IR Simulator</h1>
+          <h1 className="text-[2rem] text-center font-bold">IR Simulator</h1>
         </SidebarHeader>
         <SidebarContent>
           <Navigation />

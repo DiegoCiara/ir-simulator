@@ -1,6 +1,7 @@
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
   cursor: auto !important;
 }
 
@@ -23,22 +24,10 @@
   cursor: auto !important;
 }
 
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.closemodal{
+  color: var(--gray);
+  cursor: pointer;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 
 .loading-overlay {
   position: fixed;
@@ -59,4 +48,35 @@
 
 .loading-overlay.visible {
   opacity: 1;
+}
+
+.form-error{
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.card-modal{
+  min-width: 400px ;
+}
+
+@media (max-width: 900px) {
+  .card-modal{
+    min-width: 90vw ;
+  }
+
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }

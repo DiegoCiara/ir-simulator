@@ -2,11 +2,8 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from 'lucide-react';
 
 import {
@@ -30,7 +27,7 @@ import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
 
 interface NavUserProps {
-  user: User; // Usando o tipo User importado de "@/types/User"
+  user: User;
 }
 
 export function NavUser({ user }: NavUserProps) {

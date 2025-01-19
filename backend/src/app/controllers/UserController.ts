@@ -16,8 +16,8 @@ interface UserInterface {
 class UserController {
   public async findUsers(req: Request, res: Response): Promise<void> {
     try {
-      const users = await User.find();
-      res.status(200).json(users); // Retorno é feito aqui via res
+      const users = await User.find({ order: { createdAt: 'DESC'} });
+      res.status(200).json(users);
     } catch (error) {
       res.status(400).json({
         error: 'Erro ao procurar usuários, tente novamente mais tarde',
@@ -74,7 +74,7 @@ class UserController {
         return;
       }
 
-      res.status(201).json({ id: user.id }); // Envia a resposta após a criação
+      res.status(201).json({ id: user.id });
     } catch (error) {
       console.error(error);
       res.status(400).json({ error: 'Falha no registro, tente novamente' });
@@ -105,7 +105,7 @@ class UserController {
 
       await Users.update(user.id, { ...valuesToUpdate });
 
-      res.status(200).json(); // Não é necessário retornar nada no corpo
+      res.status(200).json();
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Falha ao atualizar, tente novamente.' });
@@ -133,11 +133,33 @@ class UserController {
 
       await Users.update(id, { passwordHash });
 
-      res.status(200).json(); // Enviar resposta com status 200 sem corpo
+      res.status(200).json({ message: 'Usuário atualizado com sucesso'});
     } catch (error) {
       res.status(400).json({
         error: 'Falha ao atualizar a senha, verifique os valores e tente novamente',
       });
+    }
+  }
+
+
+  public async delete(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+
+
+      const user = await Users.findOne(id);
+
+      if (!user) {
+        res.status(404).json({ message: 'Usuário não encontrado.' });
+        return;
+      }
+
+      await Users.softRemove(user);
+
+      res.status(200).json({ message: 'Usuário deletado com sucesso'});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Falha ao atualizar, tente novamente.' });
     }
   }
 }

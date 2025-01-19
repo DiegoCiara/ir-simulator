@@ -6,13 +6,13 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { useNavigate } from 'react-router-dom';
-import { ModeToggle } from './mode-toggle';
+
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
 
 export function Navigation() {
-
-  const navigate = useNavigate()
-  const isMobile = useIsMobile()
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const pages = [
     {
       url: '/declarations',
@@ -31,7 +31,12 @@ export function Navigation() {
 
   return (
     <NavigationMenu>
-      <NavigationMenuList className={`${isMobile && 'flex flex-col h-[80vh] gap-5 w-[17.5rem] items-start justify-start px-5'}`}>
+      <NavigationMenuList
+        className={`${
+          isMobile &&
+          'flex flex-col h-[80vh] gap-5 w-[17.5rem] items-start justify-start px-5'
+        }`}
+      >
         {pages.map((e) => (
           <NavigationMenuItem onClick={() => navigate(e.url)}>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>

@@ -1,4 +1,3 @@
-// src/contexts/LoadingContext.js
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface LoadingContextInterface {
@@ -37,7 +36,7 @@ export const LoadingProvider = ({ children }: LoadingProviderProps) => {
 export const useLoading = () => {
   const context = useContext(LoadingContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useLoading must be used within an LoadingProvider");
   }
   return context;
 };

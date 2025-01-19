@@ -4,11 +4,11 @@ import Login from '@/pages/login.tsx';
 import PrivateRoute from './private.routes.tsx';
 import { useTheme } from '@/context/theme-context.tsx';
 import { ToastContainer } from 'react-toastify';
-import { Navbar } from '@/components/navbar.tsx';
+import { Navbar } from '@/components/navbar/navbar.tsx';
 import Users from '@/pages/users.tsx';
 import Account from '@/pages/account.tsx';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar.tsx';
-import { AppSidebar } from '@/components/app-sidebar.tsx';
+import { AppSidebar } from '@/components/navbar/app-sidebar/app-sidebar.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -45,11 +45,12 @@ export const AppRoute = () => {
               element={
                 <PrivateRoute>
                   <SidebarProvider>
-                    <Navbar />
-                    <AppSidebar side='right'/>
-                    <SidebarInset></SidebarInset>
+                    <SidebarInset>
+                      <Navbar />
+                      <AppSidebar side="right" />
+                      <e.component />
+                    </SidebarInset>
                   </SidebarProvider>
-                  <e.component />
                 </PrivateRoute>
               }
             />

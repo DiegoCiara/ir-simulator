@@ -57,7 +57,6 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
   async function login(email: string, password: string) {
       try {
         const response = await api.post("/auth/authenticate", { email, password });
-        // console.warn(response.status)
         if (response.status === 200) {
           signIn(response.data.token, response.data);
         }
@@ -90,7 +89,7 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
         signOut,
         user,
         setUser,
-        api, // Forneça a instância do Axios configurada para uso em componentes filhos
+        api,
       }}
     >
       {children}
@@ -100,7 +99,6 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
 
 export default AuthContext;
 
-// Função para usar o contexto de autenticação em componentes
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
