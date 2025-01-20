@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLoading } from '@/context/loading-context';
 import { useUser } from '@/context/user-context';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -44,9 +45,13 @@ export default function SignUp() {
           await navigate(`/auth-2fa/${data.email}`);
         }
       }
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error?.response?.data?.message || 'Algo deu errado, tente novamente')
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -56,11 +61,9 @@ export default function SignUp() {
 
   return (
     <section className="flex flex-col gap-5 items-center h-[100vh] justify-center">
-    <h1 className='font-medium text-[2.2rem]'>
-      IR Simulator
-    </h1>
+      <h1 className="font-medium text-[2.2rem]">IR Simulator</h1>
       <form onSubmit={handleSubmit}>
-        <Card className='border-none'>
+        <Card className="border-none">
           <CardHeader>
             <CardTitle>Crie sua conta</CardTitle>
             <CardDescription>

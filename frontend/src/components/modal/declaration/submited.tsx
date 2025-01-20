@@ -13,6 +13,7 @@ import { useLoading } from '@/context/loading-context';
 import ModalContainer from '..';
 import { useEffect, useState } from 'react';
 import { Declaration } from '@/types/Declaration';
+import { AxiosError } from 'axios';
 
 interface DeleteDeclarationModalProps {
   id: string;
@@ -20,7 +21,6 @@ interface DeleteDeclarationModalProps {
   close: () => void;
   getData: () => void;
 }
-
 
 export default function SubmitDeclarationModal({
   open,
@@ -33,8 +33,8 @@ export default function SubmitDeclarationModal({
     status: '',
     values: {
       rent: 0,
-      deduction: 0
-    }
+      deduction: 0,
+    },
   };
   const { onLoading, offLoading } = useLoading();
   const [data, setData] = useState<Declaration>(defaultData);
@@ -46,18 +46,19 @@ export default function SubmitDeclarationModal({
     try {
       const { data } = await getDeclaration(id);
       setData(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível buscar os dados da declaração, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
   }
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchDeclarations();
   }, []);
 
@@ -69,19 +70,24 @@ export default function SubmitDeclarationModal({
     e.preventDefault();
     await onLoading();
     try {
-      const response = await updateDeclaration(id, {...data, status: 'SUBMITED'});
+      const response = await updateDeclaration(id, {
+        ...data,
+        status: 'SUBMITED',
+      });
       console.log(response?.status, 'status');
       console.log(response.data);
       if (response.status === 204) {
         toast.success('Declaração submetida com sucesso.');
-        await getData()
+        await getData();
         await close();
       }
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message || 'Algo deu errado, tente novamente.',
-      );
-      console.log(error);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -95,7 +101,8 @@ export default function SubmitDeclarationModal({
             <CardHeader>
               <CardTitle className="font-bold">Atenção</CardTitle>
               <CardDescription>
-                Você está submetendo uma declaração do ano de {data.year}, ao confirmar, esta ação não poderá ser revertida.
+                Você está submetendo uma declaração do ano de {data.year}, ao
+                confirmar, esta ação não poderá ser revertida.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -109,7 +116,10 @@ export default function SubmitDeclarationModal({
               >
                 Cancelar
               </Button>
-              <Button className="w-full bg-green-700 hover:bg-green-900 text-white" type="submit">
+              <Button
+                className="w-full bg-green-700 hover:bg-green-900 text-white"
+                type="submit"
+              >
                 Confirmar
               </Button>
             </CardFooter>

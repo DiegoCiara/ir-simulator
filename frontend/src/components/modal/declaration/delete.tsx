@@ -12,6 +12,7 @@ import { useDeclaration } from '@/context/declaration-context';
 import { useLoading } from '@/context/loading-context';
 import ModalContainer from '..';
 import { useEffect, useState } from 'react';
+import { AxiosError } from 'axios';
 
 interface DeleteDeclarationModalProps {
   id: string;
@@ -20,8 +21,8 @@ interface DeleteDeclarationModalProps {
   getData: () => void;
 }
 
-interface DeleteDeclaration{
-  year:string
+interface DeleteDeclaration {
+  year: string;
 }
 
 export default function DeleteDeclarationModal({
@@ -43,12 +44,14 @@ export default function DeleteDeclarationModal({
     try {
       const { data } = await getDeclaration(id);
       setData(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível encontrar a declaração, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error?.response?.data?.message ||
+            'Não foi possível encontrar a declaração, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -71,13 +74,17 @@ export default function DeleteDeclarationModal({
       console.log(response.data);
       if (response.status === 204) {
         toast.success('Declaração removida com sucesso.');
-        await getData()
+        await getData();
         await close();
       }
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message || 'Algo deu errado, tente novamente.',
-      );
+    } catch (error) {
+        if (error instanceof AxiosError) {
+          console.error(error);
+          return toast.error(
+            error?.response?.data?.message ||
+              'Algo deu errado, tente novamente.',
+          );
+        }
       console.log(error);
     } finally {
       await offLoading();
@@ -92,7 +99,8 @@ export default function DeleteDeclarationModal({
             <CardHeader>
               <CardTitle className="font-bold text-red-600">Atenção</CardTitle>
               <CardDescription>
-                Você está removendo uma declaração do ano de {data.year}, ao confirmar, esta declaração não ficará mais disponível.
+                Você está removendo uma declaração do ano de {data.year}, ao
+                confirmar, esta declaração não ficará mais disponível.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

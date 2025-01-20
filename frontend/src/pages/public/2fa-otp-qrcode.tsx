@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/input-otp';
 import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
+import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -25,7 +26,7 @@ export default function QrCode2Fa() {
   const { verifySecret, get2FaQrCode, signIn } = useAuth();
   const { email } = useParams();
   const [secret, setSecret] = useState<string>('');
-  const [code, setCode] = useState<string>('')
+  const [code, setCode] = useState<string>('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,7 +37,7 @@ export default function QrCode2Fa() {
       const response = await verifySecret({ email: email!, secret });
       console.log(response);
       if (response.status === 200) {
-        await signIn(response.data.token, response.data.user)
+        await signIn(response.data.token, response.data.user);
         await navigate('/declarations');
       }
     } catch (error) {
@@ -46,18 +47,18 @@ export default function QrCode2Fa() {
     }
   };
 
-
   async function fetchQrCode() {
     await onLoading();
     try {
       const { data } = await get2FaQrCode(email!);
       setCode(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível renderizar o QR Code, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -72,13 +73,13 @@ export default function QrCode2Fa() {
       <h1 className="font-medium text-[2.2rem]">IR Simulator</h1>
       <form onSubmit={handleSubmit}>
         <Card className="border-none">
-          <CardHeader className=''>
+          <CardHeader className="">
             <CardTitle>Autenticação 2 fatores</CardTitle>
             <CardDescription>
               Siga os passos abaixo para habilitar a autenticação em 2 fatores.
             </CardDescription>
           </CardHeader>
-          <div className='w-full flex flex-col items-center pb-5'>
+          <div className="w-full flex flex-col items-center pb-5">
             <CardDescription>
               1. Instale o aplicativo Google Authenticator ou similar;
             </CardDescription>
@@ -87,7 +88,7 @@ export default function QrCode2Fa() {
             </CardDescription>
           </div>
           <CardContent className="space-y-2 flex flex-col items-center">
-            <img className='w-[200px] h-[200px] rounded-lg' src={code}/>
+            <img className="w-[200px] h-[200px] rounded-lg" src={code} />
             <CardDescription>
               3. Cole abaixo o token gerado no aplicativo;
             </CardDescription>

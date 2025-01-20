@@ -18,6 +18,7 @@ import { SelectInput } from '@/components/select-input/select-input';
 import { formatCurrency } from '@/utils/formats';
 import { CardContent } from '@mui/material';
 import { yearsDeclaration } from '@/utils/mock';
+import { AxiosError } from 'axios';
 
 const defaultData = {
   year: '',
@@ -83,17 +84,17 @@ export default function RectifiedDeclaration() {
         toast.success('Declaração retificada com sucesso');
         navigate('/declarations');
       }
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível retificar a declaração, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
   };
-
 
   const handleChangeObject = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -131,12 +132,13 @@ export default function RectifiedDeclaration() {
     try {
       const { data } = await getDeclaration(id!);
       setOriginal(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error.response.data.message ||
-          'Não foi possível buscar os dados da declaração tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }

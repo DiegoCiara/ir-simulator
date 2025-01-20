@@ -19,6 +19,7 @@ import UpdateDeclarationModal from './update';
 import SubmitDeclarationModal from './submited';
 import { useNavigate } from 'react-router-dom';
 import DeleteDeclarationModal from './delete';
+import { AxiosError } from 'axios';
 
 interface DetailDeclarationModalProps {
   id: string;
@@ -41,7 +42,7 @@ export default function DetailDeclarationModal({
       deduction: 0,
     },
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { onLoading, offLoading } = useLoading();
   const [data, setData] = useState<Declaration>(defaultData);
   const [updateModal, setUpdateModal] = useState<boolean>(false);
@@ -54,12 +55,13 @@ export default function DetailDeclarationModal({
     try {
       const { data } = await getDeclaration(id);
       setData(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error.response.data.message ||
-          'Não foi possível buscar os dados da declaração, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error?.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -109,9 +111,9 @@ export default function DetailDeclarationModal({
           id={id}
           open={deleteModal}
           close={controlDelete}
-          getData={async () =>{
-            await getData()
-            await close()
+          getData={async () => {
+            await getData();
+            await close();
           }}
         />
       )}
@@ -168,7 +170,12 @@ export default function DetailDeclarationModal({
               </Button>
             </>
           ) : (
-            <Button className="w-full" variant={'secondary'} type="submit" onClick={() => navigate(`/declarations/retification/${id}`)}>
+            <Button
+              className="w-full"
+              variant={'secondary'}
+              type="submit"
+              onClick={() => navigate(`/declarations/retification/${id}`)}
+            >
               Retificar
             </Button>
           )}

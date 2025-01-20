@@ -18,6 +18,7 @@ import { SelectInput } from '@/components/select-input/select-input';
 import { formatCurrency } from '@/utils/formats';
 import { CardContent } from '@mui/material';
 import { yearsDeclaration } from '@/utils/mock';
+import { AxiosError } from 'axios';
 
 const defaultData = {
   year: '',
@@ -54,7 +55,7 @@ export default function CreateDeclaration() {
       [fieldName]: errorMessage,
     }));
 
-    return errorMessage.length === 0
+    return errorMessage.length === 0;
   };
 
   const validateFields = () => {
@@ -85,17 +86,17 @@ export default function CreateDeclaration() {
         toast.success('Declaração criada com sucesso');
         navigate('/declarations');
       }
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível criar a declaração, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
   };
-
 
   const handleChangeObject = (
     event: React.ChangeEvent<HTMLInputElement>,

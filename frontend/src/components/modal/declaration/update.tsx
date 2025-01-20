@@ -18,6 +18,7 @@ import { formatCurrency } from '@/utils/formats';
 import { SelectInput } from '@/components/select-input/select-input';
 import { Input } from '@/components/ui/input';
 import { yearsDeclaration } from '@/utils/mock';
+import { AxiosError } from 'axios';
 
 interface UpdateDeclarationModalProps {
   id: string;
@@ -30,7 +31,7 @@ export default function UpdateDeclarationModal({
   id,
   open,
   close,
-  getData
+  getData,
 }: UpdateDeclarationModalProps) {
   const defaultData = {
     year: '',
@@ -92,15 +93,16 @@ export default function UpdateDeclarationModal({
       const response = await updateDeclaration(id, data);
       if (response.status === 204) {
         toast.success('Declaração atualizada com sucesso');
-        await getData()
+        await getData();
         await close();
       }
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível atualizar a declaração, tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -142,12 +144,13 @@ export default function UpdateDeclarationModal({
     try {
       const { data } = await getDeclaration(id);
       setData(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error.response.data.message ||
-          'Não foi possível buscar os dados da declaração tente novamente.',
-      );
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }

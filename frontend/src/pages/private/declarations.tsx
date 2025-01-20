@@ -44,6 +44,7 @@ import { Label } from '@/components/ui/label';
 import UpdateDeclarationModal from '@/components/modal/declaration/update';
 import { Badge } from '@/components/ui/badge';
 import { yearsDeclaration } from '@/utils/mock';
+import { AxiosError } from 'axios';
 
 export default function Declarations() {
   const { onLoading, offLoading } = useLoading();
@@ -116,12 +117,14 @@ export default function Declarations() {
     try {
       const { data } = await getDeclarations();
       setData(data);
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error?.response?.data?.message ||
-          'Não foi possível buscar as declarações tente novamente.',
-      );
+
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
