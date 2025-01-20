@@ -16,13 +16,20 @@ interface UserInterface {
   password: string;
   secret?: string;
 }
+/**
+ * @swagger
+ * tags:
+ *   name: Autenticação
+ *   description: Operações relativas à autenticação
+ */
 
 class AuthController {
   /**
    * @swagger
-   * /auth/authenticate:
+   * /auth/:
    *   post:
    *     summary: Autentica um usuário
+   *     tags: [Autenticação]
    *     requestBody:
    *       required: true
    *       content:
@@ -97,6 +104,7 @@ class AuthController {
    * /auth/2fa/{email}:
    *   get:
    *     summary: Gera o QR Code para configuração de autenticação de dois fatores
+   *     tags: [Autenticação]
    *     parameters:
    *       - in: path
    *         name: email
@@ -148,7 +156,8 @@ class AuthController {
    * @swagger
    * /auth/2fa/verify:
    *   post:
-   *     summary: Verifica o token da autenticação de dois fatores
+   *     summary: Verifica o token da autenticação de dois fatores e retorna o token da sessão
+   *     tags: [Autenticação]
    *     requestBody:
    *       required: true
    *       content:

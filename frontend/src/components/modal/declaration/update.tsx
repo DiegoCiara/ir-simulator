@@ -90,7 +90,7 @@ export default function UpdateDeclarationModal({
     await onLoading();
     try {
       const response = await updateDeclaration(id, data);
-      if (response.status === 200) {
+      if (response.status === 204) {
         toast.success('Declaração atualizada com sucesso');
         await getData()
         await close();

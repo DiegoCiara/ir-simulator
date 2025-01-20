@@ -63,7 +63,7 @@ export default function Otp() {
                 onChange={(e) => setSecret(e)}
               >
                 <InputOTPGroup>
-                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={0}/>
                   <InputOTPSlot index={1} />
                   <InputOTPSlot index={2} />
                 </InputOTPGroup>

@@ -15,12 +15,21 @@ interface UserInterface {
   secret?: string;
 }
 
+
+/**
+ * @swagger
+ * tags:
+ *   name: Usuários
+ *   description: Operações relativas aos usuários
+ */
+
 class UserController {
   /**
    * @swagger
    * /user/{id}:
    *   get:
    *     summary: Retorna o usuário procurado pelo ID
+   *     tags: [Usuários]
    *     parameters:
    *       - in: path
    *         name: id
@@ -49,8 +58,7 @@ class UserController {
    */
   public async findUserById(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const user = await Users.findOne(id, {
+      const user = await Users.findOne(req.userId, {
         select: ['id', 'name', 'email', 'createdAt', 'has_configured'],
       });
 
@@ -73,6 +81,7 @@ class UserController {
    * /user:
    *   post:
    *     summary: Cria um novo usuário
+   *     tags: [Usuários]
    *     requestBody:
    *       required: true
    *       content:
@@ -117,7 +126,11 @@ class UserController {
       const findUser = await Users.findOne({ where: { email } });
 
       if (findUser) {
-        res.status(409).json({ message: 'Usuário já existe.' });
+        res
+          .status(409)
+          .json({
+            message: 'Já existe um usuário cadastrado com este e-mail.',
+          });
         return;
       }
 
@@ -141,7 +154,7 @@ class UserController {
         return;
       }
 
-      res.status(201).json({ id: user.id });
+      res.status(201).json({ id: user.id, name: user.name, email: user.email });
     } catch (error) {
       console.error(error);
       res
@@ -155,6 +168,7 @@ class UserController {
    * /user/{id}:
    *   put:
    *     summary: Atualiza os dados de um usuário
+   *     tags: [Usuários]
    *     parameters:
    *       - in: path
    *         name: id
@@ -207,7 +221,7 @@ class UserController {
 
       await Users.update(user.id, { ...valuesToUpdate });
 
-      res.status(204).send();
+      res.status(204).send({ message: 'Usuário atualizado com sucesso' });
     } catch (error) {
       console.error(error);
       res.status(500).json({

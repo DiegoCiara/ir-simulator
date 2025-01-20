@@ -44,8 +44,9 @@ export default function SignUp() {
           await navigate(`/auth-2fa/${data.email}`);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error?.response?.data?.message || 'Algo deu errado, tente novamente')
     } finally {
       await offLoading();
     }

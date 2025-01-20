@@ -72,7 +72,7 @@ export default function SubmitDeclarationModal({
       const response = await updateDeclaration(id, {...data, status: 'SUBMITED'});
       console.log(response?.status, 'status');
       console.log(response.data);
-      if (response.status === 200) {
+      if (response.status === 204) {
         toast.success('Declaração submetida com sucesso.');
         await getData()
         await close();

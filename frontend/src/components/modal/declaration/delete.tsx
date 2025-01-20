@@ -69,7 +69,7 @@ export default function DeleteDeclarationModal({
       const response = await deleteDeclaration(id);
       console.log(response?.status, 'status');
       console.log(response.data);
-      if (response.status === 200) {
+      if (response.status === 204) {
         toast.success('Declaração removida com sucesso.');
         await getData()
         await close();
