@@ -6,7 +6,10 @@ import { createContext, useContext, ReactNode } from 'react';
 
 interface DeclarationContextInterface {
   createDeclaration: (data: Declaration) => Promise<AxiosResponse>; // Update to accept a Declaration argument
-  retificateDeclaration: (id: string, data: Declaration) => Promise<AxiosResponse>; // Update to accept a Declaration argument
+  rectifiedDeclaration: (
+    id: string,
+    data: Declaration,
+  ) => Promise<AxiosResponse>; // Update to accept a Declaration argument
   getDeclarations: () => Promise<AxiosResponse>;
   getDeclaration: (id: string) => Promise<AxiosResponse>;
   deleteDeclaration: (id: string) => Promise<AxiosResponse>;
@@ -37,8 +40,8 @@ export const DeclarationProvider = ({ children }: DeclarationProviderProps) => {
     return response;
   }
 
-  async function retificateDeclaration(id: string, data: Declaration) {
-    const response = await api.post(`/declaration/retificate/${id}`, data);
+  async function rectifiedDeclaration(id: string, data: Declaration) {
+    const response = await api.post(`/declaration/rectified/${id}`, data);
     return response;
   }
 
@@ -60,7 +63,7 @@ export const DeclarationProvider = ({ children }: DeclarationProviderProps) => {
         getDeclaration,
         deleteDeclaration,
         updateDeclaration,
-        retificateDeclaration
+        rectifiedDeclaration,
       }}
     >
       {children}

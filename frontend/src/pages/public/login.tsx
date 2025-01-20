@@ -49,9 +49,9 @@ export default function Login() {
           }
         }
       }
-    } catch (error) {
-      console.error(error);
-      toast.error('Algo deu errado, tente novamente');
+    } catch (error: any) {
+      console.error('errrrooo', error);
+      toast.error(error.response.data.message || 'Algo deu errado, tente novamente');
     } finally {
       await offLoading();
     }

@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { SelectInput } from '@/components/select-input/select-input';
 import { formatCurrency } from '@/utils/formats';
 import { CardContent } from '@mui/material';
+import { yearsDeclaration } from '@/utils/mock';
 
 const defaultData = {
   year: '',
@@ -93,17 +94,6 @@ export default function CreateDeclaration() {
     }
   };
 
-  const options = [
-    {
-      title: 'Selecione um ano',
-      items: [
-        { value: '2024', label: '2024' },
-        { value: '2023', label: '2023' },
-        { value: '2022', label: '2022' },
-        { value: '2020', label: '2020' },
-      ],
-    },
-  ];
 
   const handleChangeObject = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -154,7 +144,7 @@ export default function CreateDeclaration() {
               <div className="space-y-1">
                 <Label htmlFor="name">Ano da declaração</Label>
                 <SelectInput
-                  options={options}
+                  options={yearsDeclaration}
                   value={data.year}
                   onBlur={() => validateField('year', data.year)}
                   placeholder="Selecione um ano de declaração"

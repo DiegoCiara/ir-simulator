@@ -37,11 +37,11 @@ class Declaration extends BaseEntity {
   user!: User;
 
   @Column({ default: false })
-  has_retificate!: boolean;
+  has_rectified!: boolean;
 
-  @ManyToOne(() => Declaration, (token) => token.retificate, { nullable: true })
-  @JoinColumn([{ name: 'retificate', referencedColumnName: 'id' }])
-  retificate!: Declaration;
+  @ManyToOne(() => Declaration, (token) => token.rectified, { nullable: true })
+  @JoinColumn([{ name: 'rectified', referencedColumnName: 'id' }])
+  rectified!: Declaration;
 
   @CreateDateColumn()
   createdAt!: Date;

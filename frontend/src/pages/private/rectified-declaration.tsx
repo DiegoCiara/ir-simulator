@@ -17,6 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SelectInput } from '@/components/select-input/select-input';
 import { formatCurrency } from '@/utils/formats';
 import { CardContent } from '@mui/material';
+import { yearsDeclaration } from '@/utils/mock';
 
 const defaultData = {
   year: '',
@@ -25,13 +26,13 @@ const defaultData = {
     deduction: 0,
   },
 };
-export default function RetificateDeclaration() {
+export default function RectifiedDeclaration() {
   const { onLoading, offLoading } = useLoading();
   const [original, setOriginal] = useState<Declaration>(defaultData);
   const [data, setData] = useState<Declaration>(defaultData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { id } = useParams();
-  const { retificateDeclaration, getDeclaration } = useDeclaration();
+  const { rectifiedDeclaration, getDeclaration } = useDeclaration();
   const navigate = useNavigate();
 
   const validateField = (fieldName: string, value: any) => {
@@ -77,33 +78,22 @@ export default function RetificateDeclaration() {
 
     await onLoading();
     try {
-      const response = await retificateDeclaration(id!, data);
+      const response = await rectifiedDeclaration(id!, data);
       if (response.status === 201) {
-        toast.success('Declaração criada com sucesso');
+        toast.success('Declaração retificada com sucesso');
         navigate('/declarations');
       }
     } catch (error: any) {
       console.error(error);
       toast.error(
         error?.response?.data?.message ||
-          'Não foi possível buscar os usuários tente novamente.',
+          'Não foi possível retificar a declaração, tente novamente.',
       );
     } finally {
       await offLoading();
     }
   };
 
-  const options = [
-    {
-      title: 'Selecione um ano',
-      items: [
-        { value: '2024', label: '2024' },
-        { value: '2023', label: '2023' },
-        { value: '2022', label: '2022' },
-        { value: '2020', label: '2020' },
-      ],
-    },
-  ];
 
   const handleChangeObject = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -159,17 +149,19 @@ export default function RetificateDeclaration() {
   return (
     <main>
       <section className="flex flex-col gap-5 h-[100vh] items-center justify-start sm:justify-center">
-          <CardHeader className='px-0 pb-0 sm:pb-5'>
-            <CardTitle>Retificar Declaração</CardTitle>
-            <CardDescription>Informe os dados da retificação abaixo.</CardDescription>
-          </CardHeader>
+        <CardHeader className="px-0 pb-0 sm:pb-5">
+          <CardTitle>Retificar Declaração</CardTitle>
+          <CardDescription>
+            Informe os dados da retificação abaixo.
+          </CardDescription>
+        </CardHeader>
         <form
           onSubmit={handleSubmit}
           className="w-[85vw] max-w-[400px] sm:min-w-[60vw] sm:w-full sm:flex justify-center items-start"
         >
           <Card className="border-none shadow-none ">
-            <CardHeader className='pb-0'>
-              <CardTitle className='text-[18px]'>Dados Originais</CardTitle>
+            <CardHeader className="pb-0">
+              <CardTitle className="text-[18px]">Dados Originais</CardTitle>
               <CardDescription>
                 Abaixo estão os dados da retificação original
               </CardDescription>
@@ -178,7 +170,7 @@ export default function RetificateDeclaration() {
               <div className="space-y-1">
                 <Label htmlFor="name">Ano da declaração</Label>
                 <SelectInput
-                  options={options}
+                  options={yearsDeclaration}
                   value={original.year}
                   placeholder="Selecione um ano de declaração"
                   disabled
@@ -205,8 +197,8 @@ export default function RetificateDeclaration() {
             </CardContent>
           </Card>
           <Card className="border-none shadow-none ">
-            <CardHeader className='pb-0'>
-              <CardTitle className='text-[18px]'>Dados Retificados</CardTitle>
+            <CardHeader className="pb-0">
+              <CardTitle className="text-[18px]">Dados Retificados</CardTitle>
               <CardDescription>
                 Insira os dados retificados da nova declaração.
               </CardDescription>
@@ -215,7 +207,7 @@ export default function RetificateDeclaration() {
               <div className="space-y-1">
                 <Label htmlFor="name">Ano da declaração</Label>
                 <SelectInput
-                  options={options}
+                  options={yearsDeclaration}
                   value={data.year}
                   onBlur={() => validateField('year', data.year)}
                   placeholder="Selecione um ano de declaração"

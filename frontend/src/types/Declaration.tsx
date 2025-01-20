@@ -8,6 +8,7 @@ export interface Declaration {
     deduction: number;
   }
   status?: string;
+  has_rectified?: boolean;
   user?: User
   createdAt?: Date
 }

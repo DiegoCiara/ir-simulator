@@ -26,7 +26,7 @@ class DeclarationController {
       }
 
       const declarations = await Declaration.find({
-        order: { year: 'DESC' },
+        order: { year: 'DESC', createdAt: 'DESC'},
         where: { user },
         relations: ['user']
       });
@@ -99,7 +99,7 @@ class DeclarationController {
       res.status(400).json({ error: 'Falha no registro, tente novamente' });
     }
   }
-  public async retificate(req: Request, res: Response): Promise<void> {
+  public async rectified(req: Request, res: Response): Promise<void> {
     try {
 
       const id = req.params.id
@@ -115,9 +115,9 @@ class DeclarationController {
         return;
       }
 
-      const retificate = await Declaration.findOne(id);
+      const rectified = await Declaration.findOne(id);
 
-      if (!retificate) {
+      if (!rectified) {
         res.status(404).json({ message: 'Declaração não encontrado.' });
         return;
       }
@@ -136,8 +136,8 @@ class DeclarationController {
         year,
         values,
         user,
-        retificate,
-        has_retificate: true,
+        rectified,
+        has_rectified: true,
       }).save();
 
       if (!declaration) {

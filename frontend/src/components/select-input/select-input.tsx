@@ -46,7 +46,7 @@ export function SelectInput({
       <SelectContent
         position="popper"
         className="z-50"
-        // style={{ zIndex: 9999 }}
+        style={{ zIndex: 9999 }}
       >
         <SelectGroup>
           {options.map((e) => (

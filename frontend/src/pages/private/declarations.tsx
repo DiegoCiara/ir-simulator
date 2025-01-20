@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, CircleX, MoreHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -42,6 +42,7 @@ import SubmitDeclarationModal from '@/components/modal/declaration/submited';
 import { SelectInput } from '@/components/select-input/select-input';
 import { Label } from '@/components/ui/label';
 import UpdateDeclarationModal from '@/components/modal/declaration/update';
+import { Badge } from '@/components/ui/badge';
 
 export default function Declarations() {
   const { onLoading, offLoading } = useLoading();
@@ -372,11 +373,19 @@ export default function Declarations() {
     },
   ];
 
+  async function clearAllFilters() {
+    optionsFilter.map((e) => {
+      e.items.map((i) => {
+        table.getColumn(i.value)?.setFilterValue('');
+      });
+    });
+  }
+
   function filterType() {
     switch (typeFilter) {
       case 'year':
         return (
-          <div className="min-w-52 sm:min-w-[300px]">
+          <div className="min-w-52 sm:min-w-[300px] relative">
             <Label className="text-[12px] text-muted-foreground">Filtro</Label>
             <SelectInput
               options={optionsYears}
@@ -388,12 +397,21 @@ export default function Declarations() {
                 table.getColumn(typeFilter)?.setFilterValue(event)
               }
             />
+            {columnFilters.length > 0 && (
+              <Badge
+                variant='secondary'
+                className='p-0 absolute top-8 right-10 text-sm cursor-pointer'
+                onClick={() => clearAllFilters()}
+              >
+                <CircleX height={18}/>
+              </Badge>
+            )}
           </div>
         );
         break;
       case 'status':
         return (
-          <div className="min-w-52 sm:min-w-[300px]">
+          <div className="min-w-52 sm:min-w-[300px] relative">
             <Label className="text-[12px] text-muted-foreground">Filtro</Label>
             <SelectInput
               options={optionsStatus}
@@ -405,6 +423,15 @@ export default function Declarations() {
                 table.getColumn(typeFilter)?.setFilterValue(event)
               }
             />
+            {columnFilters.length > 0 && (
+              <Badge
+                variant='secondary'
+                className='p-0 absolute top-8 right-10 text-sm cursor-pointer'
+                onClick={() => clearAllFilters()}
+              >
+                <CircleX height={18}/>
+              </Badge>
+            )}
           </div>
         );
         break;
@@ -500,7 +527,7 @@ export default function Declarations() {
                         {row.getVisibleCells().map((cell) => (
                           <TableCell
                             key={cell.id}
-                            className="min-w-[150px] sm:min-w-[30px]"
+                            className="min-w-[170px] sm:min-w-[30px]"
                           >
                             {flexRender(
                               cell.column.columnDef.cell,

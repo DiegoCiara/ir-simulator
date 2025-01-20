@@ -7,7 +7,6 @@ import {
 } from 'react';
 import { User } from '../types/User';
 import { api } from '../api/api';
-import { toast } from 'react-toastify';
 import { AxiosResponse } from 'axios';
 
 interface AuthContextInterface {

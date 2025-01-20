@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { formatCurrency } from '@/utils/formats';
 import { SelectInput } from '@/components/select-input/select-input';
 import { Input } from '@/components/ui/input';
+import { yearsDeclaration } from '@/utils/mock';
 
 interface UpdateDeclarationModalProps {
   id: string;
@@ -44,8 +45,6 @@ export default function UpdateDeclarationModal({
 
   const { getDeclaration, updateDeclaration } = useDeclaration();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const { createDeclaration } = useDeclaration();
 
   const validateField = (fieldName: string, value: any) => {
     let errorMessage = '';
@@ -106,18 +105,6 @@ export default function UpdateDeclarationModal({
       await offLoading();
     }
   };
-
-  const options = [
-    {
-      title: 'Selecione um ano',
-      items: [
-        { value: '2024', label: '2024' },
-        { value: '2023', label: '2023' },
-        { value: '2022', label: '2022' },
-        { value: '2020', label: '2020' },
-      ],
-    },
-  ];
 
   const handleChangeObject = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -191,7 +178,7 @@ export default function UpdateDeclarationModal({
             <div className="space-y-1">
               <Label htmlFor="name">Ano da declaração</Label>
               <SelectInput
-                options={options}
+                options={yearsDeclaration}
                 value={data.year}
                 onBlur={() => validateField('year', data.year)}
                 placeholder="Selecione um ano de declaração"

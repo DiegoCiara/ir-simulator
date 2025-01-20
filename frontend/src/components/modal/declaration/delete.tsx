@@ -70,7 +70,7 @@ export default function DeleteDeclarationModal({
       console.log(response?.status, 'status');
       console.log(response.data);
       if (response.status === 200) {
-        toast.success('Declaração deletada com sucesso.');
+        toast.success('Declaração removida com sucesso.');
         await getData()
         await close();
       }
@@ -92,7 +92,7 @@ export default function DeleteDeclarationModal({
             <CardHeader>
               <CardTitle className="font-bold text-red-600">Atenção</CardTitle>
               <CardDescription>
-                Você está deletando uma declaração do ano de {data.year}, ao confirmar, esta declaração não ficará mais disponível.
+                Você está removendo uma declaração do ano de {data.year}, ao confirmar, esta declaração não ficará mais disponível.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

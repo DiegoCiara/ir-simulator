@@ -83,20 +83,6 @@ export function NavUser({ user }: NavUserProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate('/account')}>
-                <BadgeCheck />
-                Minha Conta
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => navigate('/settings/billing')}>
-                <CreditCard />
-                Cobrança
-              </DropdownMenuItem> */}
-              {/* <DropdownMenuItem>
-                <Bell />
-                Notificações
-              </DropdownMenuItem> */}
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logout()}>
               <LogOut />

@@ -12,7 +12,7 @@ import CreateDeclaration from '@/pages/private/create-declaration.tsx';
 import SignUp from '@/pages/public/signup.tsx';
 import QrCode2Fa from '@/pages/public/2fa-qrcode.tsx';
 import Otp from '@/pages/public/otp.tsx';
-import RetificateDeclaration from '@/pages/private/retificate-declaration.tsx';
+import RectifiedDeclaration from '@/pages/private/rectified-declaration.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -28,7 +28,7 @@ export const AppRoute = () => {
     },
     {
       path: '/declarations/retification/:id',
-      component: RetificateDeclaration,
+      component: RectifiedDeclaration,
     },
     {
       path: '/account',

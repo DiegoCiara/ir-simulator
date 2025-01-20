@@ -50,7 +50,7 @@ Funcionalidades Esperadas
 
 3. Histórico de Preenchimentos:
    ✅ Exibição de uma lista com os anos e datas de preenchimento de declarações anteriores.
-   Opção para visualizar ou editar declarações anteriores com status de não submetida (lembrar de criar status) e para as submetidas, apresentar opção de retificar, demonstrando diferenças.
+   ✅ Opção para visualizar ou editar declarações anteriores com status de não submetida (lembrar de criar status) e para as submetidas, apresentar opção de retificar, demonstrando diferenças.
 
 4. Design Responsivo:
    ✅ Total adaptação para dispositivos móveis e desktops.
