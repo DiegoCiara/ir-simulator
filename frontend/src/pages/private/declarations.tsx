@@ -11,19 +11,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -39,8 +37,11 @@ import { useLoading } from '@/context/loading-context';
 import DetailDeclarationModal from '@/components/modal/declaration/detail';
 import DeleteDeclarationModal from '@/components/modal/declaration/delete';
 import { useNavigate } from 'react-router-dom';
-import { formatCurrency, formatStatus } from '@/utils/formats';
+import { formatCurrency, formatDate, formatStatus } from '@/utils/formats';
 import SubmitDeclarationModal from '@/components/modal/declaration/submited';
+import { SelectInput } from '@/components/select-input/select-input';
+import { Label } from '@/components/ui/label';
+import UpdateDeclarationModal from '@/components/modal/declaration/update';
 
 export default function Declarations() {
   const { onLoading, offLoading } = useLoading();
@@ -48,18 +49,32 @@ export default function Declarations() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [typeFilter, setTypeFilter] = useState<string>('year');
   const [data, setData] = useState<Declaration[]>([]);
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [detailModal, setDetailModal] = useState<boolean>(false);
+  const [updateModal, setUpdateModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [id, setId] = useState<string>('');
   const [submitId, setSubmitId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
+  const [updateId, setUpdateId] = useState<string>('');
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const { getDeclarations } = useDeclaration();
 
   const navigate = useNavigate();
+
+  function openUpdateModal(id: string) {
+    if (id) {
+      setUpdateId(id);
+      setUpdateModal(!updateModal);
+    }
+  }
+  function closeUpdateModal() {
+    setUpdateId('');
+    setUpdateModal(!updateModal);
+  }
 
   function openSubmitModal(id: string) {
     if (id) {
@@ -229,6 +244,28 @@ export default function Declarations() {
       },
     },
     {
+      accessorKey: 'createdAt',
+      header: ({ column }) => {
+        return (
+          <div>
+            Data de criação
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              <ArrowUpDown />
+            </Button>
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const createdAt = row.original.createdAt!;
+        return <div>{formatDate(createdAt.toString())}</div>;
+      },
+    },
+    {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
@@ -245,17 +282,31 @@ export default function Declarations() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {item.status === 'UNSUBMITED' && (
-                <DropdownMenuItem onClick={() => openSubmitModal(item.id!)}>
-                  Submeter
+              {item.status === 'SUBMITED' && (
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate(`/declarations/retification/${item.id!}`)
+                  }
+                >
+                  Retificar
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => openDetailModal(item.id!)}>
                 Visualizar Declaração
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => openDeleteModal(item.id!)}>
-                Remover Usuário
-              </DropdownMenuItem>
+              {item.status === 'UNSUBMITED' && (
+                <>
+                  <DropdownMenuItem onClick={() => openUpdateModal(item.id!)}>
+                    Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openSubmitModal(item.id!)}>
+                    Submeter
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openDeleteModal(item.id!)}>
+                    Remover Declaração
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -286,8 +337,92 @@ export default function Declarations() {
     },
   });
 
+  const optionsFilter = [
+    {
+      title: 'Filtros',
+      items: [
+        {
+          label: 'Ano',
+          value: 'year',
+        },
+        {
+          label: 'Status',
+          value: 'status',
+        },
+      ],
+    },
+  ];
+  const optionsYears = [
+    {
+      title: 'Anos',
+      items: Array.from(new Set(data.map((e) => e.year))).map((year) => ({
+        label: year,
+        value: year,
+      })),
+    },
+  ];
+
+  const optionsStatus = [
+    {
+      title: 'Status',
+      items: Array.from(new Set(data.map((e) => e.status!))).map((status) => ({
+        label: formatStatus(status),
+        value: status,
+      })),
+    },
+  ];
+
+  function filterType() {
+    switch (typeFilter) {
+      case 'year':
+        return (
+          <div className="min-w-52 sm:min-w-[300px]">
+            <Label className="text-[12px] text-muted-foreground">Filtro</Label>
+            <SelectInput
+              options={optionsYears}
+              placeholder={`Filtre por ano`}
+              value={String(
+                table.getColumn(typeFilter)?.getFilterValue() ?? '',
+              )}
+              onChange={(event) =>
+                table.getColumn(typeFilter)?.setFilterValue(event)
+              }
+            />
+          </div>
+        );
+        break;
+      case 'status':
+        return (
+          <div className="min-w-52 sm:min-w-[300px]">
+            <Label className="text-[12px] text-muted-foreground">Filtro</Label>
+            <SelectInput
+              options={optionsStatus}
+              placeholder={`Filtre por status`}
+              value={String(
+                table.getColumn(typeFilter)?.getFilterValue() ?? '',
+              )}
+              onChange={(event) =>
+                table.getColumn(typeFilter)?.setFilterValue(event)
+              }
+            />
+          </div>
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
     <>
+      {updateId && (
+        <UpdateDeclarationModal
+          id={updateId}
+          open={updateModal}
+          close={closeUpdateModal}
+          getData={fetchDeclarations}
+        />
+      )}
       {id && (
         <DetailDeclarationModal
           id={id}
@@ -320,43 +455,20 @@ export default function Declarations() {
             </Button>
           </div>
           <div className="w-full">
-            <div className="flex items-center py-0">
-              <Input
-                placeholder="Filter emails..."
-                value={
-                  (table.getColumn('email')?.getFilterValue() as string) ?? ''
-                }
-                onChange={(event) =>
-                  table.getColumn('email')?.setFilterValue(event.target.value)
-                }
-                className="max-w-sm"
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="ml-auto">
-                    Colunas <ChevronDown />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {table
-                    .getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => {
-                      return (
-                        <DropdownMenuCheckboxItem
-                          key={column.id}
-                          className="capitalize"
-                          checked={column.getIsVisible()}
-                          onCheckedChange={(value) =>
-                            column.toggleVisibility(!!value)
-                          }
-                        >
-                          {column.id}
-                        </DropdownMenuCheckboxItem>
-                      );
-                    })}
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div className="flex items-center py-0 gap-2">
+              {filterType()}
+              <div>
+                <Label className="text-[12px] text-muted-foreground">
+                  Tipo
+                </Label>
+                <SelectInput
+                  options={optionsFilter}
+                  value={typeFilter}
+                  className="w-[100px]"
+                  placeholder="Selecione um tipo de filtro"
+                  onChange={(e) => setTypeFilter(e)}
+                />
+              </div>
             </div>
             <div className="rounded-md border mt-4">
               <Table>

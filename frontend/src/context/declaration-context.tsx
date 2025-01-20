@@ -6,13 +6,16 @@ import { createContext, useContext, ReactNode } from 'react';
 
 interface DeclarationContextInterface {
   createDeclaration: (data: Declaration) => Promise<AxiosResponse>; // Update to accept a Declaration argument
+  retificateDeclaration: (id: string, data: Declaration) => Promise<AxiosResponse>; // Update to accept a Declaration argument
   getDeclarations: () => Promise<AxiosResponse>;
   getDeclaration: (id: string) => Promise<AxiosResponse>;
   deleteDeclaration: (id: string) => Promise<AxiosResponse>;
   updateDeclaration: (id: string, data: Declaration) => Promise<AxiosResponse>;
 }
 
-const DeclarationContext = createContext<DeclarationContextInterface | undefined>(undefined);
+const DeclarationContext = createContext<
+  DeclarationContextInterface | undefined
+>(undefined);
 
 interface DeclarationProviderProps {
   children: ReactNode;
@@ -34,6 +37,11 @@ export const DeclarationProvider = ({ children }: DeclarationProviderProps) => {
     return response;
   }
 
+  async function retificateDeclaration(id: string, data: Declaration) {
+    const response = await api.post(`/declaration/retificate/${id}`, data);
+    return response;
+  }
+
   async function deleteDeclaration(id: string) {
     const response = await api.delete(`/declaration/${id}`);
     return response;
@@ -45,7 +53,16 @@ export const DeclarationProvider = ({ children }: DeclarationProviderProps) => {
   }
 
   return (
-    <DeclarationContext.Provider value={{ getDeclarations, createDeclaration, getDeclaration, deleteDeclaration, updateDeclaration }}>
+    <DeclarationContext.Provider
+      value={{
+        getDeclarations,
+        createDeclaration,
+        getDeclaration,
+        deleteDeclaration,
+        updateDeclaration,
+        retificateDeclaration
+      }}
+    >
       {children}
     </DeclarationContext.Provider>
   );
@@ -54,7 +71,9 @@ export const DeclarationProvider = ({ children }: DeclarationProviderProps) => {
 export const useDeclaration = () => {
   const context = useContext(DeclarationContext);
   if (!context) {
-    throw new Error('useDeclaration must be used within an DeclarationProvider');
+    throw new Error(
+      'useDeclaration must be used within an DeclarationProvider',
+    );
   }
   return context;
 };

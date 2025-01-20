@@ -99,6 +99,60 @@ class DeclarationController {
       res.status(400).json({ error: 'Falha no registro, tente novamente' });
     }
   }
+  public async retificate(req: Request, res: Response): Promise<void> {
+    try {
+
+      const id = req.params.id
+      if (!id) {
+        res.status(404).json({ message: 'ID não informado.' });
+        return;
+      }
+
+      const user = await User.findOne(req.userId);
+
+      if (!user) {
+        res.status(404).json({ message: 'Usuário não encontrado.' });
+        return;
+      }
+
+      const retificate = await Declaration.findOne(id);
+
+      if (!retificate) {
+        res.status(404).json({ message: 'Declaração não encontrado.' });
+        return;
+      }
+
+      const {
+        year,
+        values,
+      }: DeclarationInterface = req.body;
+
+      if (!year || !values) {
+        res.status(400).json({ message: 'Valores inválidos para criação do usuário' });
+        return;
+      }
+
+      const declaration = await Declaration.create({
+        year,
+        values,
+        user,
+        retificate,
+        has_retificate: true,
+      }).save();
+
+      if (!declaration) {
+        res.status(400).json({
+          message: 'Não foi possível criar a declaração, tente novamente',
+        });
+        return;
+      }
+
+      res.status(201).json({ id: declaration.id });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ error: 'Falha no registro, tente novamente' });
+    }
+  }
 
   public async update(req: Request, res: Response): Promise<void> {
     try {

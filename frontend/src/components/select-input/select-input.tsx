@@ -21,11 +21,12 @@ interface SelectInputProps {
     title: string;
     items: Item[];
   }[];
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   params?: React.ComponentPropsWithoutRef<typeof Select>;
   className?: string;
-  onBlur: () => void
+  onBlur?: () => void
+  disabled?: boolean
 }
 
 export function SelectInput({
@@ -34,10 +35,11 @@ export function SelectInput({
   onChange,
   placeholder,
   onBlur,
+  disabled,
   ...params
 }: SelectInputProps) {
   return (
-    <Select value={value} onValueChange={onChange} defaultValue={value} {...params} >
+    <Select value={value} onValueChange={onChange} defaultValue={value} {...params} disabled={disabled} >
       <SelectTrigger onBlur={onBlur}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

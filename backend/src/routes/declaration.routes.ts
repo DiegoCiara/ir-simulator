@@ -9,6 +9,7 @@ const routes = Router();
 routes.get('/', ensureAuthenticated, DeclarationController.findDeclarations);
 routes.get('/:id', ensureAuthenticated, DeclarationController.findDeclarationById);
 routes.post('/', ensureAuthenticated, DeclarationController.create);
+routes.post('/retificate/', ensureAuthenticated, DeclarationController.retificate);
 routes.put('/:id', ensureAuthenticated, DeclarationController.update);
 routes.delete('/:id', ensureAuthenticated, DeclarationController.delete);
 

@@ -3,31 +3,31 @@
 Objetivo: Desenvolver uma aplicação Full Stack que simule o preenchimento de declarações de imposto de renda, sendo 100% responsiva para dispositivos móveis. O sistema deve incluir funcionalidades de autenticação, preenchimento de dados, armazenamento em banco de dados e exibição de histórico de preenchimentos.
 
 Requisitos Técnicos
-1 Back-end:
-Utilizar Node.js com TypeScript.
-- Framework: NestJS (preferencial) ou Express✅.
-✅ Banco de dados: PostgreSQL.
+1. Back-end:
+   ✅ Utilizar Node.js com TypeScript.
+   - Framework: NestJS (preferencial) ou Express✅.
+   ✅ Banco de dados: PostgreSQL.
 
-Criar uma API RESTful para:
--  ✅ Gerenciamento de usuários (registro, login e autenticação 2FA).
--  ✅ Preenchimento de declarações de imposto de renda.
-- Exibição do histórico de preenchimentos por ano.
--  ✅ Implementar autenticação usando JWT.
+   Criar uma API RESTful para:
+   ✅ Gerenciamento de usuários (registro, login e autenticação 2FA).
+   ✅ Preenchimento de declarações de imposto de renda.
+   ✅ Exibição do histórico de preenchimentos por ano.
+   ✅ Implementar autenticação usando JWT.
 
 2. Front-end:
    ✅ Utilizar ReactJS com TypeScript.
    ✅ Interface responsiva, adaptada para dispositivos móveis e desktops.
 
-Funcionalidades:
-✅ Tela de login e registro de usuários.
-✅ Tela para preenchimento de declarações (com validações).
-Tela de histórico, listando as declarações por ano.
+   Funcionalidades:
+   ✅ Tela de login e registro de usuários.
+   ✅ Tela para preenchimento de declarações (com validações).
+   ✅ Tela de histórico, listando as declarações por ano.
 
 3. Banco de Dados:
    Modelos principais:
    ✅ Usuário: Nome, e-mail, senha (hash).
    ✅ Declaração: Ano, dados preenchidos (JSON ou campos específicos), data de criação, usuário associado.
-   Banco: PostgreSQL.
+   ✅ Banco: PostgreSQL.
 
 4. Design e UX/UI:
    ✅ Interface web responsiva e acessível.
@@ -41,16 +41,16 @@ Tela de histórico, listando as declarações por ano.
 Funcionalidades Esperadas
 
 1. Autenticação:
-   Registro e login de usuários com validação de dados.
-   Persistência da sessão utilizando JWT.
+   ✅ Registro e login de usuários com validação de dados.
+   ✅ Persistência da sessão utilizando JWT.
 
 2. Preenchimento de Declarações:
-   Formulário para o preenchimento de dados de imposto de renda (dados fictícios ou reais simplificados).
-   Validação em tempo real dos campos obrigatórios.
+   ✅ Formulário para o preenchimento de dados de imposto de renda (dados fictícios ou reais simplificados).
+   ✅ Validação em tempo real dos campos obrigatórios.
 
 3. Histórico de Preenchimentos:
-   Exibição de uma lista com os anos e datas de preenchimento de declarações anteriores.
-   Opção para visualizar ou editar declarações anteriores com status de não submetida (lembrar de criar status) e para as submetidas, apresentar opção de retificar, demonstrando diferenças,.
+   ✅ Exibição de uma lista com os anos e datas de preenchimento de declarações anteriores.
+   Opção para visualizar ou editar declarações anteriores com status de não submetida (lembrar de criar status) e para as submetidas, apresentar opção de retificar, demonstrando diferenças.
 
 4. Design Responsivo:
    ✅ Total adaptação para dispositivos móveis e desktops.

@@ -47,7 +47,7 @@ export default function DeleteDeclarationModal({
       console.error(error);
       toast.error(
         error?.response?.data?.message ||
-          'Não foi possível deletar o usuário tente novamente.',
+          'Não foi possível encontrar a declaração, tente novamente.',
       );
     } finally {
       await offLoading();
@@ -70,7 +70,7 @@ export default function DeleteDeclarationModal({
       console.log(response?.status, 'status');
       console.log(response.data);
       if (response.status === 200) {
-        toast.success('Usuário deletado com sucesso.');
+        toast.success('Declaração deletada com sucesso.');
         await getData()
         await close();
       }

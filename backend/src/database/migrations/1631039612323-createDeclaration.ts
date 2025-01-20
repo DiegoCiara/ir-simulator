@@ -32,6 +32,16 @@ export class createDeclaration1631039612323 implements MigrationInterface {
             type: 'uuid',
           },
           {
+            name: 'retificate',
+            type: 'uuid',
+            isNullable: true
+          },
+          {
+            name: 'has_retificate',
+            type: 'boolean',
+            default: false
+          },
+          {
             name: 'createdAt',
             type: 'timestamp',
             default: 'now()',
@@ -54,6 +64,14 @@ export class createDeclaration1631039612323 implements MigrationInterface {
       new TableForeignKey({
         columnNames: ['user'],
         referencedTableName: 'users',
+        referencedColumnNames: ['id'],
+      })
+    );
+    await queryRunner.createForeignKey(
+      'declarations',
+      new TableForeignKey({
+        columnNames: ['retificate'],
+        referencedTableName: 'declarations',
         referencedColumnNames: ['id'],
       })
     );

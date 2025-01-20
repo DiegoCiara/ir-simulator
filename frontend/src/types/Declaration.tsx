@@ -9,4 +9,5 @@ export interface Declaration {
   }
   status?: string;
   user?: User
+  createdAt?: Date
 }
