@@ -9,10 +9,10 @@ Utilizar Node.js com TypeScript.
 ✅ Banco de dados: PostgreSQL.
 
 Criar uma API RESTful para:
-- Gerenciamento de usuários (registro, login e autenticação 2FA).
-- Preenchimento de declarações de imposto de renda.
+-  ✅ Gerenciamento de usuários (registro, login e autenticação 2FA).
+-  ✅ Preenchimento de declarações de imposto de renda.
 - Exibição do histórico de preenchimentos por ano.
-- Implementar autenticação usando JWT.
+-  ✅ Implementar autenticação usando JWT.
 
 2. Front-end:
    ✅ Utilizar ReactJS com TypeScript.
@@ -20,7 +20,7 @@ Criar uma API RESTful para:
 
 Funcionalidades:
 ✅ Tela de login e registro de usuários.
-Tela para preenchimento de declarações (com validações).
+✅ Tela para preenchimento de declarações (com validações).
 Tela de histórico, listando as declarações por ano.
 
 3. Banco de Dados:

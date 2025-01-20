@@ -42,7 +42,11 @@ export default function Login() {
         const response = await login(email, password);
         console.log(response);
         if (response.status === 200) {
-          await navigate(`/auth-2fa/otp/${response.data.email}`);
+          if (!response.data.has_configured) {
+            await navigate(`/auth-2fa/${response.data.email}`);
+          } else {
+            await navigate(`/auth-2fa/otp/${response.data.email}`);
+          }
         }
       }
     } catch (error) {
@@ -57,11 +61,9 @@ export default function Login() {
 
   return (
     <section className="flex flex-col gap-5 items-center h-[100vh] justify-center">
-      <h1 className='font-medium text-[2.2rem]'>
-        IR Simulator
-      </h1>
+      <h1 className="font-medium text-[2.2rem]">IR Simulator</h1>
       <form onSubmit={handleSubmit}>
-        <Card className="border-none">
+        <Card className="border-none shadow-none">
           <CardHeader>
             <CardTitle>Login</CardTitle>
             <CardDescription>

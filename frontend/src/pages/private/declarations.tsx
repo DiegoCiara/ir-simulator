@@ -35,11 +35,12 @@ import {
 import { Declaration } from '@/types/Declaration';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import CreateDeclarationModal from '@/pages/private/create-declaration';
 import { useLoading } from '@/context/loading-context';
 import DetailDeclarationModal from '@/components/modal/declaration/detail';
 import DeleteDeclarationModal from '@/components/modal/declaration/delete';
 import { useNavigate } from 'react-router-dom';
+import { formatCurrency, formatStatus } from '@/utils/formats';
+import SubmitDeclarationModal from '@/components/modal/declaration/submited';
 
 export default function Declarations() {
   const { onLoading, offLoading } = useLoading();
@@ -48,20 +49,27 @@ export default function Declarations() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [data, setData] = useState<Declaration[]>([]);
-  const [createModal, setCreateModal] = useState<boolean>(false);
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [detailModal, setDetailModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [id, setId] = useState<string>('');
+  const [submitId, setSubmitId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-
   const { getDeclarations } = useDeclaration();
 
   const navigate = useNavigate();
 
-  function openCreateModal() {
-    setCreateModal(!createModal);
+  function openSubmitModal(id: string) {
+    if (id) {
+      setSubmitId(id);
+      setSubmitModal(!submitModal);
+    }
+  }
+  function closeSubmitModal() {
+    setSubmitId('');
+    setSubmitModal(!submitModal);
   }
 
   function openDetailModal(id: string) {
@@ -110,7 +118,7 @@ export default function Declarations() {
     const calculatePageSize = () => {
       const availableHeight = window.innerHeight - 400;
       const rowHeight = 40;
-      const itemsPerPage = Math.max(5, Math.floor(availableHeight / rowHeight)); // Pelo menos 10 itens
+      const itemsPerPage = Math.max(5, Math.floor(availableHeight / rowHeight));
       setPageSize(itemsPerPage);
     };
     calculatePageSize();
@@ -122,32 +130,109 @@ export default function Declarations() {
 
   const columns: ColumnDef<Declaration>[] = [
     {
-      accessorKey: 'name',
-      header: 'Nome',
-      cell: ({ row }) => <div>{row.getValue('name')}</div>,
-    },
-    {
-      accessorKey: 'email',
+      accessorKey: 'year',
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            E-mail
-            <ArrowUpDown />
-          </Button>
+          <div>
+            Ano
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              <ArrowUpDown />
+            </Button>
+          </div>
         );
       },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue('email')}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue('year')}</div>,
+    },
+    {
+      accessorKey: 'values.rent',
+      header: ({ column }) => {
+        return (
+          <div>
+            Renda
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              <ArrowUpDown />
+            </Button>
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const rent = row.original.values.rent!;
+        return (
+          <div className="uppercase">{formatCurrency(rent.toString())}</div>
+        );
+      },
+    },
+    {
+      accessorKey: 'values.deduction',
+      header: ({ column }) => {
+        return (
+          <div>
+            Dedução
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              <ArrowUpDown />
+            </Button>
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const deduction = row.original.values.deduction!;
+        return (
+          <div className="uppercase">
+            {formatCurrency(deduction.toString())}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: ({ column }) => {
+        return (
+          <div>
+            Status
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+            >
+              <ArrowUpDown />
+            </Button>
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const status = row.original.status!;
+        return <div>{formatStatus(status)}</div>;
+      },
+    },
+    {
+      accessorKey: 'values.name',
+      header: 'Usuário',
+      cell: ({ row }) => {
+        const name = row.original.user!.name;
+        return <span>{name}</span>;
+      },
     },
     {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const id = row.original.id!;
+        const item = row.original;
 
         return (
           <DropdownMenu>
@@ -160,10 +245,15 @@ export default function Declarations() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => openDetailModal(id)}>
-                Visualizar Usuário
+              {item.status === 'UNSUBMITED' && (
+                <DropdownMenuItem onClick={() => openSubmitModal(item.id!)}>
+                  Submeter
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => openDetailModal(item.id!)}>
+                Visualizar Declaração
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => openDeleteModal(id)}>
+              <DropdownMenuItem onClick={() => openDeleteModal(item.id!)}>
                 Remover Usuário
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -203,6 +293,14 @@ export default function Declarations() {
           id={id}
           open={detailModal}
           close={closeDetailModal}
+        />
+      )}
+      {submitId && (
+        <SubmitDeclarationModal
+          id={submitId}
+          open={submitModal}
+          close={closeSubmitModal}
+          getData={fetchDeclarations}
         />
       )}
       {deleteId && (
@@ -288,7 +386,10 @@ export default function Declarations() {
                         data-state={row.getIsSelected() && 'selected'}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id} className="min-w-[150px]">
+                          <TableCell
+                            key={cell.id}
+                            className="min-w-[150px] sm:min-w-[30px]"
+                          >
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),

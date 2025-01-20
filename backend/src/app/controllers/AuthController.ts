@@ -43,6 +43,7 @@ class AuthController {
         id: user.id,
         email: user.email,
         name: user.name,
+        has_configured: user.has_configured
       });
     } catch (error) {
       console.error(error);

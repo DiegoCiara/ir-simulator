@@ -34,7 +34,7 @@ export default function Otp() {
       const response = await verifySecret({ email: email!, secret });
       console.log(response);
       if (response.status === 201) {
-        await signIn(response.data.token, response.data.user)
+        await signIn(response.data.token, response.data.user);
         await navigate('/declarations');
       }
     } catch (error) {
@@ -42,14 +42,13 @@ export default function Otp() {
     } finally {
       await offLoading();
     }
-    // setLoading(false)
   };
 
   return (
     <section className="flex flex-col gap-5 items-center h-[100vh] justify-center">
       <h1 className="font-medium text-[2.2rem]">IR Simulator</h1>
       <form onSubmit={handleSubmit}>
-        <Card className="border-none">
+        <Card className="border-none shadow-none">
           <CardHeader>
             <CardTitle>Autenticação 2 fatores</CardTitle>
             <CardDescription>

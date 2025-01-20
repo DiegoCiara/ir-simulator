@@ -1,3 +1,4 @@
+import { User } from "./User";
 
 export interface Declaration {
   id?: string;
@@ -6,4 +7,6 @@ export interface Declaration {
     rent: number;
     deduction: number;
   }
+  status?: string;
+  user?: User
 }

@@ -15,7 +15,7 @@ import { Declaration } from '@/types/Declaration';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { SelectInput } from '@/components/select-input/select-input';
-import { formatCurrency } from '@/utils/formatCurrency';
+import { formatCurrency } from '@/utils/formats';
 import { CardContent } from '@mui/material';
 
 const defaultData = {
@@ -34,7 +34,6 @@ export default function CreateDeclaration() {
   const { createDeclaration } = useDeclaration();
   const navigate = useNavigate();
 
-  // Função para validar um campo individual
   const validateField = (fieldName: string, value: any) => {
     let errorMessage = '';
 
@@ -49,8 +48,6 @@ export default function CreateDeclaration() {
     if (fieldName === 'deduction' && value < 0) {
       errorMessage = 'As deduções não podem ser negativas.';
     }
-
-    // Atualizar o estado de erros apenas para o campo atual
     setErrors((prevErrors) => ({
       ...prevErrors,
       [fieldName]: errorMessage,
@@ -60,7 +57,8 @@ export default function CreateDeclaration() {
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!data.year.trim()) newErrors.year = 'O ano de declaração é obrigatório.';
+    if (!data.year.trim())
+      newErrors.year = 'O ano de declaração é obrigatório.';
     if (!data.values.rent || data.values.rent <= 0) {
       newErrors.rent = 'O valor do salário deve ser maior que 0.';
     }
@@ -140,12 +138,12 @@ export default function CreateDeclaration() {
 
   return (
     <main>
-      <section className="flex flex-col gap-5 h-[100vh] items-center justify-center">
+      <section className="flex flex-col gap-5 h-[100vh] items-center justify-start sm:justify-center">
         <form
           onSubmit={handleSubmit}
           className="w-[85vw] max-w-[400px] sm:w-full"
         >
-          <Card className="border-none">
+          <Card className="border-none shadow-none">
             <CardHeader>
               <CardTitle>Nova declaração</CardTitle>
               <CardDescription>
@@ -192,7 +190,9 @@ export default function CreateDeclaration() {
                   type="text"
                   id="deduction"
                   maxLength={25}
-                  onBlur={() => validateField('deduction', data.values.deduction)}
+                  onBlur={() =>
+                    validateField('deduction', data.values.deduction)
+                  }
                   value={formatCurrency(data.values.deduction.toString())}
                   onChange={(e) =>
                     handleChangeObject(e, 'values', 'deduction', 'currency')

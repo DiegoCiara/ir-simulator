@@ -26,8 +26,9 @@ class DeclarationController {
       }
 
       const declarations = await Declaration.find({
-        order: { createdAt: 'DESC' },
-        where: { user }
+        order: { year: 'DESC' },
+        where: { user },
+        relations: ['user']
       });
 
       console.log(declarations)
@@ -104,7 +105,8 @@ class DeclarationController {
       const { id } = req.params;
       const {
         year,
-        values
+        values,
+        status,
       }: DeclarationInterface = req.body;
 
       const declaration = await Declaration.findOne(id);
@@ -117,6 +119,7 @@ class DeclarationController {
       const valuesToUpdate = {
         year: year || declaration.year,
         values: values || declaration.values,
+        status: status || declaration.status,
       };
 
       await Declaration.update(declaration.id, { ...valuesToUpdate });

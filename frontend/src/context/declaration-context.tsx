@@ -9,6 +9,7 @@ interface DeclarationContextInterface {
   getDeclarations: () => Promise<AxiosResponse>;
   getDeclaration: (id: string) => Promise<AxiosResponse>;
   deleteDeclaration: (id: string) => Promise<AxiosResponse>;
+  updateDeclaration: (id: string, data: Declaration) => Promise<AxiosResponse>;
 }
 
 const DeclarationContext = createContext<DeclarationContextInterface | undefined>(undefined);
@@ -38,8 +39,13 @@ export const DeclarationProvider = ({ children }: DeclarationProviderProps) => {
     return response;
   }
 
+  async function updateDeclaration(id: string, data: Declaration) {
+    const response = await api.put(`/declaration/${id}`, data);
+    return response;
+  }
+
   return (
-    <DeclarationContext.Provider value={{ getDeclarations, createDeclaration, getDeclaration, deleteDeclaration }}>
+    <DeclarationContext.Provider value={{ getDeclarations, createDeclaration, getDeclaration, deleteDeclaration, updateDeclaration }}>
       {children}
     </DeclarationContext.Provider>
   );
