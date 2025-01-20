@@ -18,14 +18,9 @@ export function Navigation() {
       url: '/declarations',
       name: 'Declarações',
     },
-
-    {
-      url: '/users',
-      name: 'Usuários',
-    },
     {
       url: '/account',
-      name: 'Conta',
+      name: 'Minha Conta',
     },
   ];
 

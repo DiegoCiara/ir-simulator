@@ -18,21 +18,18 @@ export class createDeclaration1631039612323 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'income',
+            name: 'values',
             type: 'jsonb',
           },
           {
-            name: 'dependents',
-            type: 'jsonb',
+            name: 'status',
+            type: 'enum',
+            enum: ['UNSUBMITED', 'SUBMITED'],
+            default: `'UNSUBMITED'`,
           },
           {
-            name: 'direct_goods',
-            type: 'jsonb',
-          },
-          {
-            name: 'observation',
-            type: 'varchar',
-            isNullable: true
+            name: 'user',
+            type: 'uuid',
           },
           {
             name: 'createdAt',
@@ -43,10 +40,6 @@ export class createDeclaration1631039612323 implements MigrationInterface {
             name: 'updatedAt',
             type: 'timestamp',
             default: 'now()',
-          },
-          {
-            name: 'user',
-            type: 'uuid',
           },
           {
             name: 'deletedAt',

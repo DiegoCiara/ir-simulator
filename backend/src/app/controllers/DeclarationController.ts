@@ -2,43 +2,16 @@ import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import emailValidator from '@utils/emailValidator';
 import Declaration from '@entities/Declaration';
-import { validateRequestBody } from '@utils/validateRequestBody';
-
-interface Income {
-  wage: number;
-  rent: number;
-  investments: number;
-  others: number;
-}
-
-interface Dependents {
-  name: string;
-  age: number;
-  relationship: string;
-}
-
-interface MaterialGoods {
-  type: string;
-  description: string;
-  value: number;
-  acquisition_date: Date;
-  location: string;
-}
+import User from '@entities/User';
 
 interface DeclarationInterface {
   year: string;
-  income: Income;
-  dependents: Dependents[];
-  direct_goods: MaterialGoods[];
-  observation?: string;
+  values: {
+    rent: number;
+    deduction: number
+  };
+  status?: string;
 }
-
-const requiredFields = [
-  'year',
-  'income',
-  'dependents',
-  'direct_goods',
-];
 
 const optionalFields = ['observation'];
 
@@ -81,30 +54,27 @@ class DeclarationController {
 
   public async create(req: Request, res: Response): Promise<void> {
     try {
+      const user = await User.findOne(req.userId);
+
+      if (!user) {
+        res.status(404).json({ message: 'Usuário não encontrado.' });
+        return;
+      }
+
       const {
         year,
-        income,
-        dependents,
-        direct_goods,
-        observation,
+        values
       }: DeclarationInterface = req.body;
 
-      const validationError = validateRequestBody(
-        req.body,
-        requiredFields,
-        optionalFields,
-      );
-      if (validationError) {
-        res.status(400).json({ message: validationError });
+      if (!year || !values) {
+        res.status(400).json({ message: 'Valores inválidos para criação do usuário' });
         return;
       }
 
       const declaration = await Declaration.create({
         year,
-        income,
-        dependents,
-        direct_goods,
-        observation,
+        values,
+        user
       }).save();
 
       if (!declaration) {
@@ -126,10 +96,7 @@ class DeclarationController {
       const { id } = req.params;
       const {
         year,
-        income,
-        dependents,
-        direct_goods,
-        observation,
+        values
       }: DeclarationInterface = req.body;
 
       const declaration = await Declaration.findOne(id);
@@ -141,10 +108,7 @@ class DeclarationController {
 
       const valuesToUpdate = {
         year: year || declaration.year,
-        income: income || declaration.income,
-        dependents: dependents || declaration.dependents,
-        direct_goods: direct_goods || declaration.direct_goods,
-        observation: observation || declaration.observation,
+        values: values || declaration.values,
       };
 
       await Declaration.update(declaration.id, { ...valuesToUpdate });

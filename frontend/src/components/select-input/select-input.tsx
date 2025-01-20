@@ -21,10 +21,11 @@ interface SelectInputProps {
     title: string;
     items: Item[];
   }[];
-  onChange: (value: string) => void; // Função chamada ao mudar o valor
-  placeholder?: string; // Placeholder opcional
-  params?: React.ComponentPropsWithoutRef<typeof Select>; // Props adicionais para o SelectTrigger
-  className?: string; // ClassName opcional para o SelectTrigger
+  onChange: (value: string) => void;
+  placeholder?: string;
+  params?: React.ComponentPropsWithoutRef<typeof Select>;
+  className?: string;
+  onBlur: () => void
 }
 
 export function SelectInput({
@@ -32,18 +33,18 @@ export function SelectInput({
   options,
   onChange,
   placeholder,
+  onBlur,
   ...params
 }: SelectInputProps) {
   return (
     <Select value={value} onValueChange={onChange} defaultValue={value} {...params} >
-      <SelectTrigger >
+      <SelectTrigger onBlur={onBlur}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      {/* Usando Portal para garantir que o conteúdo é renderizado no body */}
       <SelectContent
         position="popper"
         className="z-50"
-        style={{ zIndex: 9999 }}
+        // style={{ zIndex: 9999 }}
       >
         <SelectGroup>
           {options.map((e) => (

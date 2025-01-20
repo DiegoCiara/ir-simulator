@@ -4,6 +4,7 @@ import {
   Card,
   CardDescription,
   CardFooter,
+  CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,64 +16,82 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { SelectInput } from '@/components/select-input/select-input';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { Trash2 } from 'lucide-react';
+import { CardContent } from '@mui/material';
 
 const defaultData = {
   year: '',
-  income: {
-    wage: 0,
+  values: {
     rent: 0,
-    investments: 0,
-    others: 0,
+    deduction: 0,
   },
-  dependents: [],
-  direct_goods: [],
 };
-
 export default function CreateDeclaration() {
   const { onLoading, offLoading } = useLoading();
   const [data, setData] = useState<Declaration>(defaultData);
-  const [step, setStep] = React.useState(0);
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const { createDeclaration } = useDeclaration();
-
   const navigate = useNavigate();
 
-  function nextStep() {
-    if (step < 4) {
-      setStep(step + 1);
-    }
-  }
+  // Função para validar um campo individual
+  const validateField = (fieldName: string, value: any) => {
+    let errorMessage = '';
 
-  function prevStep() {
-    if (step > 0) {
-      setStep(step - 1);
+    if (fieldName === 'year' && !value.trim()) {
+      errorMessage = 'O ano de declaração é obrigatório.';
     }
-  }
+
+    if (fieldName === 'rent' && (!value || value <= 0)) {
+      errorMessage = 'O valor do salário deve ser maior que 0.';
+    }
+
+    if (fieldName === 'deduction' && value < 0) {
+      errorMessage = 'As deduções não podem ser negativas.';
+    }
+
+    // Atualizar o estado de erros apenas para o campo atual
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: errorMessage,
+    }));
+  };
+
+  const validateFields = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!data.year.trim()) newErrors.year = 'O ano de declaração é obrigatório.';
+    if (!data.values.rent || data.values.rent <= 0) {
+      newErrors.rent = 'O valor do salário deve ser maior que 0.';
+    }
+    if (data.values.deduction < 0) {
+      newErrors.deduction = 'As deduções não podem ser negativas.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (step < 4) {
-      nextStep();
-    } else {
-      await onLoading();
-      try {
-        const response = await createDeclaration(data);
-        console.log(response?.status, 'status');
-        console.log(response.data);
-        if (response.status === 201) {
-          toast.success('Declaração criada com sucesso');
-          navigate('/declarations');
-        }
-      } catch (error: any) {
-        console.error(error);
-        toast.error(
-          error?.response?.data?.message ||
-            'Não foi possível buscar os usuários tente novamente.',
-        );
-      } finally {
-        await offLoading();
+
+    if (!validateFields()) return;
+
+    await onLoading();
+    try {
+      const response = await createDeclaration(data);
+      if (response.status === 201) {
+        toast.success('Declaração criada com sucesso');
+        navigate('/declarations');
       }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(
+        error?.response?.data?.message ||
+          'Não foi possível buscar os usuários tente novamente.',
+      );
+    } finally {
+      await offLoading();
     }
   };
 
@@ -80,49 +99,10 @@ export default function CreateDeclaration() {
     {
       title: 'Selecione um ano',
       items: [
-        {
-          value: '2024',
-          label: '2024',
-        },
-        {
-          value: '2023',
-          label: '2023',
-        },
-        {
-          value: '2022',
-          label: '2022',
-        },
-        {
-          value: '2020',
-          label: '2020',
-        },
-      ],
-    },
-  ];
-  const relationships = [
-    {
-      title: 'Selecione a relação',
-      items: [
-        {
-          value: 'child',
-          label: 'Filho(a)',
-        },
-        {
-          value: 'spouse',
-          label: 'Cônjuge',
-        },
-        {
-          value: 'father',
-          label: 'Pai',
-        },
-        {
-          value: 'mother',
-          label: 'Mãe',
-        },
-        {
-          value: 'other',
-          label: 'Outro',
-        },
+        { value: '2024', label: '2024' },
+        { value: '2023', label: '2023' },
+        { value: '2022', label: '2022' },
+        { value: '2020', label: '2020' },
       ],
     },
   ];
@@ -137,341 +117,96 @@ export default function CreateDeclaration() {
 
     if (typeof currentItem === 'object' && currentItem !== null) {
       if (type === 'currency') {
-        const valueNumeric = event.target.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-
+        const value = event.target.value.replace(/[^0-9]/g, '');
         setData({
           ...data,
           [item]: {
             ...currentItem,
-            [subitem]: valueNumeric ? parseFloat(valueNumeric) / 100 : 0,
+            [subitem]: value ? parseFloat(value) / 100 : 0,
           },
         });
       } else {
-        if (type === 'currency') {
-          const value = event.target.value; // Remove todos os caracteres não numéricos
-
-          setData({
-            ...data,
-            [item]: {
-              ...currentItem,
-              [subitem]: value,
-            },
-          });
-        }
+        const value = event.target.value;
+        setData({
+          ...data,
+          [item]: {
+            ...currentItem,
+            [subitem]: value,
+          },
+        });
       }
-    } else {
-      console.error(`Invalid item or subitem: ${item}, ${subitem}`);
     }
   };
 
-  const addItem = (column: keyof Declaration, type: string) => {
-    const columnKey = Array.isArray(data[column]) ? data[column] : [];
-    const newItem =
-      type === 'dependents'
-        ? { name: '', relationship: '' }
-        : { type: '', value: 0 };
-    setData({
-      ...data,
-      [column]: [...columnKey, newItem], // Add the new dependent
-    });
-  };
-
-  const removeItem = (index: number, column: keyof Declaration) => {
-    const columnKey = Array.isArray(data[column]) ? data[column] : [];
-    setData({
-      ...data,
-      [column]: columnKey.filter((_, i) => i !== index),
-    });
-  };
-
-  function stepReturn() {
-    switch (step) {
-      case 0:
-        return {
-          title: (
-            <>
-              <span className="text-muted-foreground">Passo 1</span>
-              <CardTitle className="mt-0">Ano da Declaração</CardTitle>
+  return (
+    <main>
+      <section className="flex flex-col gap-5 h-[100vh] items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="w-[85vw] max-w-[400px] sm:w-full"
+        >
+          <Card className="border-none">
+            <CardHeader>
+              <CardTitle>Nova declaração</CardTitle>
               <CardDescription>
                 Selecione o ano qual deseja declarar
               </CardDescription>
-            </>
-          ),
-          component: (
-            <>
+            </CardHeader>
+            <CardContent className="space-y-2">
               <div className="space-y-1">
                 <Label htmlFor="name">Ano da declaração</Label>
                 <SelectInput
                   options={options}
                   value={data.year}
+                  onBlur={() => validateField('year', data.year)}
                   placeholder="Selecione um ano de declaração"
                   onChange={(e) => setData({ ...data, year: e })}
                 />
-              </div>
-            </>
-          ),
-          disabled: data.year === '',
-        };
-        break;
-      case 1:
-        return {
-          title: (
-            <>
-              <span className="text-muted-foreground">Passo 2</span>
-              <CardTitle>Renda</CardTitle>
-              <CardDescription>Informe os dados da sua renda</CardDescription>
-            </>
-          ),
-          component: (
-            <>
-              <div className="space-y-1">
-                <Label htmlFor="name">Salário</Label>
-                <Input
-                  type="text"
-                  id="Salario"
-                  maxLength={25}
-                  value={formatCurrency(data.income.wage.toString())}
-                  onChange={(e) =>
-                    handleChangeObject(e, 'income', 'wage', 'currency')
-                  }
-                />
+                {errors.year && (
+                  <span className="text-[12px] font-semibold text-red-600">
+                    {errors.year}
+                  </span>
+                )}
               </div>
               <div className="space-y-1">
-                <Label htmlFor="name">Alugueis</Label>
-
+                <Label htmlFor="rent">Salário</Label>
                 <Input
                   type="text"
                   id="rent"
                   maxLength={25}
-                  value={formatCurrency(data.income.rent.toString())}
+                  onBlur={() => validateField('rent', data.values.rent)}
+                  value={formatCurrency(data.values.rent.toString())}
                   onChange={(e) =>
-                    handleChangeObject(e, 'income', 'rent', 'currency')
+                    handleChangeObject(e, 'values', 'rent', 'currency')
                   }
                 />
+                {errors.rent && (
+                  <span className="text-[12px] font-semibold text-red-600">
+                    {errors.rent}
+                  </span>
+                )}
               </div>
               <div className="space-y-1">
-                <Label htmlFor="name">Investimentos</Label>
-
+                <Label htmlFor="deduction">Deduções</Label>
                 <Input
                   type="text"
-                  id="investments"
+                  id="deduction"
                   maxLength={25}
-                  value={formatCurrency(data.income.investments.toString())}
+                  onBlur={() => validateField('deduction', data.values.deduction)}
+                  value={formatCurrency(data.values.deduction.toString())}
                   onChange={(e) =>
-                    handleChangeObject(e, 'income', 'investments', 'currency')
+                    handleChangeObject(e, 'values', 'deduction', 'currency')
                   }
                 />
+                {errors.deduction && (
+                  <span className="text-[12px] font-semibold text-red-600">
+                    {errors.deduction}
+                  </span>
+                )}
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="name">Outros</Label>
-
-                <Input
-                  type="text"
-                  id="investments"
-                  maxLength={25}
-                  value={formatCurrency(data.income.others.toString())}
-                  onChange={(e) =>
-                    handleChangeObject(e, 'income', 'others', 'currency')
-                  }
-                />
-              </div>
-            </>
-          ),
-          disabled: false,
-        };
-        break;
-      case 2:
-        return {
-          title: (
-            <>
-              <CardTitle>Dependentes</CardTitle>
-              <CardDescription>Insira os dependentes</CardDescription>
-            </>
-          ),
-          component: (
-            <>
-              <div className="space-y-2">
-                {data.dependents.map((dependent, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-5 justify-between items-center"
-                  >
-                    <div className="w-full">
-                      <Label htmlFor={`dependent-${index}`}>Nome</Label>
-                      <Input
-                        type="text"
-                        id={`dependent-${index}`}
-                        value={dependent.name}
-                        placeholder="Nome do dependente"
-                        onChange={(e) => {
-                          const updatedDependents = [...data.dependents];
-                          updatedDependents[index].name = e.target.value;
-                          setData({
-                            ...data,
-                            dependents: updatedDependents,
-                          });
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <Label htmlFor={`dependent-${index}`}>Relação</Label>
-                      <SelectInput
-                        options={relationships}
-                        value={dependent.relationship}
-                        placeholder="Selecione"
-                        onChange={(e) => {
-                          const updatedDependents = [...data.dependents];
-                          updatedDependents[index].relationship = e;
-                          setData({
-                            ...data,
-                            dependents: updatedDependents,
-                          });
-                        }}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="text-red-700 mt-5"
-                      size="icon"
-                      onClick={() => removeItem(index, 'dependents')}
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              <Button
-                type="button"
-                variant="secondary"
-                className="w-full"
-                onClick={() => addItem('dependents', 'dependents')}
-              >
-                Adicionar Dependente
-              </Button>
-            </>
-          ),
-          disabled: false,
-        };
-        break;
-      case 3:
-        return {
-          title: (
-            <>
-              <CardTitle>Bens diretos</CardTitle>
-              <CardDescription>Informe seus bens</CardDescription>
-            </>
-          ),
-
-          component: (
-            <>
-              <div className="space-y-2">
-                {data.direct_goods.map((dependent, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-5 justify-between items-center"
-                  >
-                    <div className="w-full">
-                      <Label htmlFor={`dependent-${index}`}>Relação</Label>
-                      <SelectInput
-                        options={relationships}
-                        value={dependent.type}
-                        placeholder="Selecione"
-                        onChange={(e) => {
-                          const updatedDependents = [...data.direct_goods];
-                          updatedDependents[index].type = e;
-                          setData({
-                            ...data,
-                            direct_goods: updatedDependents,
-                          });
-                        }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <Label htmlFor={`dependent-${index}`}>Valor</Label>
-                      <Input
-                        type="text"
-                        id={`dependent-${index}`}
-                        value={formatCurrency(dependent.value.toString())}
-                        placeholder="Valor"
-                        onChange={(e) => {
-                          const valueNumeric = e.target.value.replace(
-                            /\D/g,
-                            '',
-                          );
-                          const updatedGoods = [...data.direct_goods];
-                          updatedGoods[index].value = valueNumeric
-                            ? parseFloat(valueNumeric) / 100
-                            : 0;
-                          setData({
-                            ...data,
-                            direct_goods: updatedGoods,
-                          });
-                        }}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="text-red-700 mt-5"
-                      size="icon"
-                      onClick={() => removeItem(index, 'direct_goods')}
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              <Button
-                type="button"
-                variant="secondary"
-                className="w-full"
-                onClick={() => addItem('direct_goods', 'direct_goods')}
-              >
-                Adicionar Dependente
-              </Button>
-            </>
-          ),
-        };
-        break;
-      default:
-        break;
-    }
-  }
-
-  return (
-    <main>
-      <section className={`flex flex-col gap-5 items-center justify-start`}>
-        <form
-          onSubmit={handleSubmit}
-          className="w-[85vw] max-w-[400px] sm:w-full"
-        >
-          <div className="flex flex-col py-10 text-center">
-            <h1 className="text-2xl font-semibold">Adicionar Declaração</h1>
-            <span className="text-sm text-muted-foreground">
-              Faça a sua declaração do imposto de renda.
-            </span>
-          </div>
-          <Card className="border-none w-full space-y-4">
-            {stepReturn()!.title}
-            {stepReturn()!.component}
+            </CardContent>
             <CardFooter className="w-full flex justify-end items-center gap-4">
-              {step > 0 && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => prevStep()}
-                >
-                  Voltar
-                </Button>
-              )}
-              <Button
-                type="submit"
-                variant={stepReturn()!.disabled ? 'ghost' : 'default'}
-                disabled={stepReturn()!.disabled}
-              >
-                {step === 4 ? 'Enviar' : 'Avançar'}
-              </Button>
+              <Button type="submit">Enviar</Button>
             </CardFooter>
           </Card>
         </form>

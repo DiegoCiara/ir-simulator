@@ -5,36 +5,35 @@ Objetivo: Desenvolver uma aplicação Full Stack que simule o preenchimento de d
 Requisitos Técnicos
 1 Back-end:
 Utilizar Node.js com TypeScript.
-- Framework: NestJS (preferencial) ou Express.
-- Banco de dados: PostgreSQL.
+- Framework: NestJS (preferencial) ou Express✅.
+✅ Banco de dados: PostgreSQL.
 
 Criar uma API RESTful para:
 - Gerenciamento de usuários (registro, login e autenticação 2FA).
-
 - Preenchimento de declarações de imposto de renda.
 - Exibição do histórico de preenchimentos por ano.
 - Implementar autenticação usando JWT.
 
 2. Front-end:
-   Utilizar ReactJS com TypeScript.
-   Interface responsiva, adaptada para dispositivos móveis e desktops.
+   ✅ Utilizar ReactJS com TypeScript.
+   ✅ Interface responsiva, adaptada para dispositivos móveis e desktops.
 
 Funcionalidades:
-Tela de login e registro de usuários.
+✅ Tela de login e registro de usuários.
 Tela para preenchimento de declarações (com validações).
 Tela de histórico, listando as declarações por ano.
 
 3. Banco de Dados:
    Modelos principais:
-   - Usuário: Nome, e-mail, senha (hash).
-   - Declaração: Ano, dados preenchidos (JSON ou campos específicos), data de criação, usuário associado.
+   ✅ Usuário: Nome, e-mail, senha (hash).
+   ✅ Declaração: Ano, dados preenchidos (JSON ou campos específicos), data de criação, usuário associado.
    Banco: PostgreSQL.
 
 4. Design e UX/UI:
-   Interface web responsiva e acessível.
-   Uso de práticas de design responsivo e acessibilidade.
-   Estilização com Tailwind CSS.
-   Suporte a contêinerização com Docker.
+   ✅ Interface web responsiva e acessível.
+   ✅ Uso de práticas de design responsivo e acessibilidade.
+   ✅ Estilização com Tailwind CSS.
+   ✅ Suporte a contêinerização com Docker.
    Implementação de CI/CD simples (opcional).
    Documentação da API utilizando Swagger ou equivalente.
    Testes básicos (unitários e de integração).
@@ -54,7 +53,7 @@ Funcionalidades Esperadas
    Opção para visualizar ou editar declarações anteriores com status de não submetida (lembrar de criar status) e para as submetidas, apresentar opção de retificar, demonstrando diferenças,.
 
 4. Design Responsivo:
-   Total adaptação para dispositivos móveis e desktops.
+   ✅ Total adaptação para dispositivos móveis e desktops.
 
 Entregáveis
 
