@@ -19,6 +19,8 @@
   "dependencies": {
     "@types/qrcode": "^1.5.5",
     "@types/speakeasy": "^2.0.10",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.7",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -30,6 +32,8 @@
     "pg": "^8.7.1",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "tsc-alias": "^1.8.8",
     "typeorm": "0.2.37",
     "typeorm-express-query-builder": "^1.5.0",

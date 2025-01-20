@@ -20,12 +20,22 @@ interface UserInterface {
 class UserController {
   public async findUserById(req: Request, res: Response): Promise<void> {
     try {
+      /**
+       * @swagger
+       * /user/:id:
+       *   get:
+       *     summary: Retorna o usuário procurado pelo id
+       *     responses:
+       *       200:
+       *         description: Consulta de usuário por ID
+       */
+
       const { id } = req.params;
 
       const user = await Users.findOne(id);
 
       if (!user) {
-        res.status(404).json({ message: 'Usuário não existe' });
+        res.status(404).json({ message: 'Usuário não encontrado.' });
         return;
       }
 
@@ -34,7 +44,7 @@ class UserController {
       console.error(error);
       res
         .status(500)
-        .json({ error: 'Erro ao buscar usuário, tente novamente' });
+        .json({ error: 'Erro interno ao buscar usuário, tente novamente.' });
     }
   }
 
@@ -45,14 +55,14 @@ class UserController {
       if (!email || !emailValidator(email)) {
         res
           .status(400)
-          .json({ message: 'Valores inválidos para o novo usuário!' });
+          .json({ message: 'Valores inválidos para o novo usuário.' });
         return;
       }
 
       const findUser = await Users.findOne({ where: { email } });
 
       if (findUser) {
-        res.status(400).json({ message: 'Este usuário já existe' });
+        res.status(409).json({ message: 'Usuário já existe.' }); // 409: Conflito
         return;
       }
 
@@ -70,8 +80,8 @@ class UserController {
       }).save();
 
       if (!user) {
-        res.status(400).json({
-          message: 'Não foi possível criar o usuário, tente novamente',
+        res.status(500).json({
+          message: 'Erro interno ao criar o usuário, tente novamente.',
         });
         return;
       }
@@ -79,17 +89,18 @@ class UserController {
       res.status(201).json({ id: user.id });
     } catch (error) {
       console.error(error);
-      res.status(400).json({ error: 'Falha no registro, tente novamente' });
+      res
+        .status(500)
+        .json({ error: 'Erro interno no registro, tente novamente.' });
     }
   }
-
 
   public async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { name, email }: UserInterface = req.body;
 
-      if ((email && !emailValidator(email)) || !email) {
+      if (email && !emailValidator(email)) {
         res.status(400).json({ message: 'Formato de e-mail inválido.' });
         return;
       }
@@ -108,10 +119,12 @@ class UserController {
 
       await Users.update(user.id, { ...valuesToUpdate });
 
-      res.status(200).json();
+      res.status(204).send(); // 204: No Content
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Falha ao atualizar, tente novamente.' });
+      res.status(500).json({
+        message: 'Erro interno ao atualizar o usuário, tente novamente.',
+      });
     }
   }
 }
