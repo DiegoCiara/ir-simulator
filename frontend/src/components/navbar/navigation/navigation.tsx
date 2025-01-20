@@ -5,7 +5,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 ('use client');
 
 import { BadgeCheck, LogOut } from 'lucide-react';
@@ -25,6 +25,7 @@ import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
 import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { getInitials } from '@/utils/formats';
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -36,11 +37,9 @@ export function Navigation() {
       url: '/declarations',
       name: 'Declarações',
     },
-    // {
-    //   url: '/account',
-    //   name: 'Minha Conta',
-    // },
   ];
+
+  const location = useLocation()
 
   async function logout() {
     await onLoading();
@@ -66,7 +65,7 @@ export function Navigation() {
       >
         {pages.map((e) => (
           <NavigationMenuItem onClick={() => navigate(e.url)}>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${location.pathname === e.url && 'underline'}`}>
               {e.name}
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -76,7 +75,7 @@ export function Navigation() {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar>
-                <AvatarFallback>CD</AvatarFallback>
+                <AvatarFallback>{getInitials(user!.name)}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -93,7 +92,6 @@ export function Navigation() {
                   </div>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => logout()}>
                 <LogOut />
                 Log out
