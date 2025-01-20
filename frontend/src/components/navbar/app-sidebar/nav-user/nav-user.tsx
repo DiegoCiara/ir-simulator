@@ -1,5 +1,3 @@
-'use client';
-
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 
 import {
@@ -26,12 +24,12 @@ interface NavUserProps {
 }
 
 export function NavUser({ user }: NavUserProps) {
-  if (!user) return;
   const { isMobile } = useSidebar();
   const { onLoading, offLoading } = useLoading();
   const navigate = useNavigate();
   const { signOut } = useAuth();
 
+  if (!user) return;
   async function logout() {
     await onLoading();
     try {

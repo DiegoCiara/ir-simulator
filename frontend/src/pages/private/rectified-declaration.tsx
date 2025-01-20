@@ -36,24 +36,26 @@ export default function RectifiedDeclaration() {
   const { rectifiedDeclaration, getDeclaration } = useDeclaration();
   const navigate = useNavigate();
 
-  const validateField = (fieldName: string, value: any) => {
+  const validateField = (fieldName: string, value: string | number) => {
     let errorMessage = '';
 
-    if (fieldName === 'year' && !value.trim()) {
+    if (fieldName === 'year' &&  typeof value === 'string' && !value.trim()) {
       errorMessage = 'O ano de declaração é obrigatório.';
     }
 
-    if (fieldName === 'rent' && (!value || value <= 0)) {
+    if (fieldName === 'rent' && (typeof value === 'number' && value <= 0)) {
       errorMessage = 'O valor do salário deve ser maior que 0.';
     }
 
-    if (fieldName === 'deduction' && value < 0) {
+    if (fieldName === 'deduction' && (typeof value === 'number' && value < 0)) {
       errorMessage = 'As deduções não podem ser negativas.';
     }
     setErrors((prevErrors) => ({
       ...prevErrors,
       [fieldName]: errorMessage,
     }));
+
+    return errorMessage.length === 0
   };
 
   const validateFields = () => {
@@ -69,6 +71,7 @@ export default function RectifiedDeclaration() {
     }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 

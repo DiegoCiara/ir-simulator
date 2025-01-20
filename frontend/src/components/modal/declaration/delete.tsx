@@ -78,13 +78,12 @@ export default function DeleteDeclarationModal({
         await close();
       }
     } catch (error) {
-        if (error instanceof AxiosError) {
-          console.error(error);
-          return toast.error(
-            error?.response?.data?.message ||
-              'Algo deu errado, tente novamente.',
-          );
-        }
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error?.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
       console.log(error);
     } finally {
       await offLoading();

@@ -12,7 +12,7 @@ import { AxiosResponse } from 'axios';
 interface AuthContextInterface {
   token: string;
   signIn: (myToken: string, user: User) => void;
-  login: (email: string, password: string) => Promise<any>;
+  login: (email: string, password: string) => Promise<AxiosResponse>;
   signOut: () => void;
   verifySecret: (data: {
     email: string;

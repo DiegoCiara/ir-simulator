@@ -6,7 +6,6 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { useLocation, useNavigate } from 'react-router-dom';
-('use client');
 
 import { LogOut } from 'lucide-react';
 

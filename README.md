@@ -5,7 +5,7 @@ Objetivo: Desenvolver uma aplicação Full Stack que simule o preenchimento de d
 Requisitos Técnicos
 1. Back-end:
    ✅ Utilizar Node.js com TypeScript.
-   - Framework: NestJS (preferencial) ou Express✅.
+   - Framework: NestJS (preferencial) ou Express ✅.
    ✅ Banco de dados: PostgreSQL.
 
    Criar uma API RESTful para:
@@ -35,7 +35,7 @@ Requisitos Técnicos
    ✅ Estilização com Tailwind CSS.
    ✅ Suporte a contêinerização com Docker.
    Implementação de CI/CD simples (opcional).
-   Documentação da API utilizando Swagger ou equivalente.
+   ✅ Documentação da API utilizando Swagger ou equivalente.
    Testes básicos (unitários e de integração).
 
 Funcionalidades Esperadas

@@ -1,11 +1,10 @@
-// src/contexts/DeclarationContext.js
 import { api } from '@/api/api';
 import { Declaration } from '@/types/Declaration';
 import { AxiosResponse } from 'axios';
 import { createContext, useContext, ReactNode } from 'react';
 
 interface DeclarationContextInterface {
-  createDeclaration: (data: Declaration) => Promise<AxiosResponse>; 
+  createDeclaration: (data: Declaration) => Promise<AxiosResponse>;
   rectifiedDeclaration: (
     id: string,
     data: Declaration,

@@ -10,12 +10,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  // width: 400,
-  // bgcolor: 'var(--modal-background)',
-  // border: '2px solid #000',
-  // borderRadius: '7px',
   boxShadow: 14,
-  // p: 4,
   outline: 'none',
 };
 
@@ -23,14 +18,12 @@ interface ModalContainerProps {
   open: boolean;
   close: () => void;
   children?: React.ReactNode; // Permite passar JSX ou texto como children
-  [key: string]: any; // Para suportar outros parâmetros opcionais, como `sx` ou `aria` attributes
 }
 
 export default function ModalContainer({
   open,
   close,
   children,
-  ...params
 }: ModalContainerProps) {
   const handleClose = (
     // event: React.SyntheticEvent | Event,
@@ -47,7 +40,6 @@ export default function ModalContainer({
         aria-describedby="transition-modal-description"
         open={open}
         onClose={handleClose}
-        {...params}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
         slotProps={{
