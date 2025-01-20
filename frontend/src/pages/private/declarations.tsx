@@ -360,11 +360,11 @@ export default function Declarations() {
       title: 'Status',
       items: [
         {
-          label: 'SUBMITED',
+          label: 'Submetido',
           value: 'SUBMITED',
         },
         {
-          label: 'UNSUBMITED',
+          label: 'Não submetido',
           value: 'UNSUBMITED',
         },
       ],
