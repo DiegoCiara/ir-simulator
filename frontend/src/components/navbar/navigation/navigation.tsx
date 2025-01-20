@@ -8,12 +8,11 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 ('use client');
 
-import { BadgeCheck, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -92,6 +91,7 @@ export function Navigation() {
                   </div>
                 </div>
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => logout()}>
                 <LogOut />
                 Log out
