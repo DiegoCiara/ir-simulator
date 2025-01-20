@@ -10,6 +10,7 @@ import Account from '@/pages/account.tsx';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from '@/components/navbar/app-sidebar/app-sidebar.tsx';
 import Declarations from '@/pages/declarations.tsx';
+import CreateDeclaration from '@/pages/create-declaration.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -26,6 +27,10 @@ export const AppRoute = () => {
     {
       path: '/declarations',
       component: Declarations,
+    },
+    {
+      path: '/declarations/create',
+      component: CreateDeclaration,
     },
     {
       path: '/account',

@@ -59,9 +59,17 @@
   min-width: 400px ;
 }
 
+.integration-form{
+  width: 80vw;
+}
+
 @media (max-width: 900px) {
   .card-modal{
     min-width: 90vw ;
+  }
+
+  .integration-form{
+    width: 95vw;
   }
 
 }

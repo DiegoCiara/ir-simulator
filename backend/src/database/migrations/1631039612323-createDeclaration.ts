@@ -22,10 +22,6 @@ export class createDeclaration1631039612323 implements MigrationInterface {
             type: 'jsonb',
           },
           {
-            name: 'deductions',
-            type: 'jsonb',
-          },
-          {
             name: 'dependents',
             type: 'jsonb',
           },
@@ -34,20 +30,8 @@ export class createDeclaration1631039612323 implements MigrationInterface {
             type: 'jsonb',
           },
           {
-            name: 'debts_liabilities',
-            type: 'jsonb',
-          },
-          {
-            name: 'payments_donations',
-            type: 'jsonb',
-          },
-          {
-            name: 'summary',
-            type: 'jsonb',
-          },
-          {
-            name: 'additional_information',
-            type: 'jsonb',
+            name: 'observation',
+            type: 'varchar',
             isNullable: true
           },
           {

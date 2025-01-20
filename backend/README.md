@@ -37,16 +37,6 @@
         "valor": 80000
       }
     ],
-    "dividas_onus": [
-      {
-        "descricao": "Financiamento imobiliário",
-        "valor": 100000
-      },
-      {
-        "descricao": "Empréstimo pessoal",
-        "valor": 20000
-      }
-    ],
     "status": "nao_submetida",
     "observacoes": "Nenhuma observação adicional."
   }
