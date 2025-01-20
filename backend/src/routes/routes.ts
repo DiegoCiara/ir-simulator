@@ -13,7 +13,7 @@ routes.get('/', (req, res) => {
 });
 
 routes.use('/auth', AuthRoutes);
-routes.use('/user/', ensureAuthenticated, UserRoutes);
+routes.use('/user/', UserRoutes);
 routes.use('/declaration/', DeclarationRoutes);
 
 export default routes;

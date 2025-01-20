@@ -18,8 +18,16 @@ const optionalFields = ['observation'];
 class DeclarationController {
   public async findDeclarations(req: Request, res: Response): Promise<void> {
     try {
+      const user = await User.findOne(req.userId);
+
+      if (!user) {
+        res.status(404).json({ message: 'Usuário não encontrado.' });
+        return;
+      }
+
       const declarations = await Declaration.find({
         order: { createdAt: 'DESC' },
+        where: { user }
       });
 
       console.log(declarations)

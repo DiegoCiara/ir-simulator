@@ -24,6 +24,12 @@ class User extends BaseEntity {
   @Column()
   passwordHash!: string;
 
+  @Column()
+  secret!: string;
+
+  @Column({ default: false })
+  has_configured!: boolean;
+
   @OneToMany(() => Declaration, (access) => access.user)
   declarations!: Declaration[];
 

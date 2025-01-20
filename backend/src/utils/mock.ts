@@ -13,12 +13,7 @@ const mocks = async (): Promise<void> => {
       console.log('Mocks ok');
       return;
     }
-
-    for (const user of users) {
-      const pass = await bcrypt.hash(user.password, 10);
-      const newUser = await User.create({ ...user, passwordHash: pass }).save();
-      console.log(`Usuário ${newUser.name} criado`);
-    }
+     
 
 
   } catch (error) {

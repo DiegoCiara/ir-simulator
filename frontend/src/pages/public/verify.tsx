@@ -10,20 +10,20 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
-import { useUser } from '@/context/user-context';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export default function SignUp() {
+export default function Otp() {
   const { onLoading, offLoading } = useLoading();
-  const { createUser } = useUser();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [data, setData] = useState({
-    name: '',
     email: '',
+    password: '',
   });
 
   function setUser(column: string, value: string) {
@@ -32,12 +32,14 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     await onLoading();
+
     try {
       e.preventDefault();
-      if (data.name === '' || data.email === '') {
+      if (data.email === '' || data.password === '') {
         toast.warn('Preencha as credenciais corretamnete');
       } else {
-        const response = await createUser(data);
+        const { email, password } = data;
+        const response = await login(email, password);
         console.log(response);
         if (response.status === 200) {
           await navigate('/declarations');
@@ -48,34 +50,25 @@ export default function SignUp() {
     } finally {
       await offLoading();
     }
+    // setLoading(false)
   };
 
-  const disabled = data.name === '' || data.email === '';
+  const disabled = data.email === '' || data.password === '';
 
   return (
     <section className="flex flex-col gap-5 items-center h-[100vh] justify-center">
-    <h1 className='font-medium text-[2.2rem]'>
-      IR Simulator
-    </h1>
+      <h1 className='font-medium text-[2.2rem]'>
+        IR Simulator
+      </h1>
       <form onSubmit={handleSubmit}>
-        <Card className='border-none'>
+        <Card className="border-none">
           <CardHeader>
-            <CardTitle>Crie sua conta</CardTitle>
+            <CardTitle>Otp</CardTitle>
             <CardDescription>
-              Crie sua conta preenchendo os dados abaixo
+              Faça o login com as credenciais da sua conta
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="name">Nome</Label>
-              <Input
-                id="name"
-                type="name"
-                placeholder="Seu nome"
-                value={data.name}
-                onChange={(e) => setUser('name', e.target.value)}
-              />
-            </div>
             <div className="space-y-1">
               <Label htmlFor="email" className="">
                 E-mail
@@ -88,6 +81,16 @@ export default function SignUp() {
                 onChange={(e) => setUser('email', e.target.value)}
               />
             </div>
+            <div className="space-y-1">
+              <Label htmlFor="password">Senha</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={data.password}
+                onChange={(e) => setUser('password', e.target.value)}
+              />
+            </div>
           </CardContent>
           <CardFooter>
             <Button className="w-full" disabled={disabled}>
@@ -98,10 +101,10 @@ export default function SignUp() {
             <Button
               className="w-full"
               variant="link"
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/signup')}
               type="button"
             >
-              Já tem uma conta? Faça o login
+              Não tem uma conta? Cadastre-se
             </Button>
           </CardFooter>
         </Card>

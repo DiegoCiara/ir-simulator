@@ -6,11 +6,11 @@ import { ensureProfile } from '@middlewares/ensureProfile';
 
 const routes = Router();
 
-routes.get('/', DeclarationController.findDeclarations);
-routes.get('/:id', DeclarationController.findDeclarationById);
-routes.post('/', DeclarationController.create);
-routes.put('/:id', DeclarationController.update);
-routes.delete('/:id', DeclarationController.delete);
+routes.get('/', ensureAuthenticated, DeclarationController.findDeclarations);
+routes.get('/:id', ensureAuthenticated, DeclarationController.findDeclarationById);
+routes.post('/', ensureAuthenticated, DeclarationController.create);
+routes.put('/:id', ensureAuthenticated, DeclarationController.update);
+routes.delete('/:id', ensureAuthenticated, DeclarationController.delete);
 
 export default routes;
 

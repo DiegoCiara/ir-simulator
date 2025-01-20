@@ -10,18 +10,19 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
+import { useUser } from '@/context/user-context';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export default function Login() {
+export default function SignUp() {
   const { onLoading, offLoading } = useLoading();
-  const { login } = useAuth();
+  const { createUser } = useUser();
   const navigate = useNavigate();
 
   const [data, setData] = useState({
+    name: '',
     email: '',
     password: '',
   });
@@ -32,17 +33,15 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     await onLoading();
-
     try {
       e.preventDefault();
-      if (data.email === '' || data.password === '') {
+      if (data.name === '' || data.email === '') {
         toast.warn('Preencha as credenciais corretamnete');
       } else {
-        const { email, password } = data;
-        const response = await login(email, password);
+        const response = await createUser(data);
         console.log(response);
-        if (response.status === 200) {
-          await navigate('/declarations');
+        if (response.status === 201) {
+          await navigate(`/auth-2fa/${data.email}`);
         }
       }
     } catch (error) {
@@ -50,25 +49,34 @@ export default function Login() {
     } finally {
       await offLoading();
     }
-    // setLoading(false)
   };
 
-  const disabled = data.email === '' || data.password === '';
+  const disabled = data.name === '' || data.email === '';
 
   return (
     <section className="flex flex-col gap-5 items-center h-[100vh] justify-center">
-      <h1 className='font-medium text-[2.2rem]'>
-        IR Simulator
-      </h1>
+    <h1 className='font-medium text-[2.2rem]'>
+      IR Simulator
+    </h1>
       <form onSubmit={handleSubmit}>
-        <Card className="border-none">
+        <Card className='border-none'>
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <CardTitle>Crie sua conta</CardTitle>
             <CardDescription>
-              Faça o login com as credenciais da sua conta
+              Crie sua conta preenchendo os dados abaixo
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
+            <div className="space-y-1">
+              <Label htmlFor="name">Nome</Label>
+              <Input
+                id="name"
+                type="name"
+                placeholder="Seu nome"
+                value={data.name}
+                onChange={(e) => setUser('name', e.target.value)}
+              />
+            </div>
             <div className="space-y-1">
               <Label htmlFor="email" className="">
                 E-mail
@@ -82,11 +90,13 @@ export default function Login() {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="email" className="">
+                Senha
+              </Label>
               <Input
-                id="password"
-                type="password"
+                id="email"
                 placeholder="••••••••"
+                autoFocus
                 value={data.password}
                 onChange={(e) => setUser('password', e.target.value)}
               />
@@ -101,10 +111,10 @@ export default function Login() {
             <Button
               className="w-full"
               variant="link"
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/login')}
               type="button"
             >
-              Não tem uma conta? Cadastre-se
+              Já tem uma conta? Faça o login
             </Button>
           </CardFooter>
         </Card>

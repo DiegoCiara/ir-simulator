@@ -35,7 +35,7 @@ import {
 import { Declaration } from '@/types/Declaration';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import CreateDeclarationModal from '@/pages/create-declaration';
+import CreateDeclarationModal from '@/pages/private/create-declaration';
 import { useLoading } from '@/context/loading-context';
 import DetailDeclarationModal from '@/components/modal/declaration/detail';
 import DeleteDeclarationModal from '@/components/modal/declaration/delete';
@@ -58,7 +58,7 @@ export default function Declarations() {
 
   const { getDeclarations } = useDeclaration();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function openCreateModal() {
     setCreateModal(!createModal);
@@ -217,7 +217,9 @@ export default function Declarations() {
         <section className="flex flex-col gap-5 items-start justify-start py-5 px-10">
           <div className="w-full flex items-center justify-between">
             <h1 className="text-[1.5rem] font-medium m-0">Declarações</h1>
-            <Button onClick={() => navigate('/declarations/create')}>Adicionar declaração</Button>
+            <Button onClick={() => navigate('/declarations/create')}>
+              Adicionar declaração
+            </Button>
           </div>
           <div className="w-full">
             <div className="flex items-center py-0">

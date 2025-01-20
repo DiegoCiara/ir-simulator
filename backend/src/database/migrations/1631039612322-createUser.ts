@@ -25,7 +25,15 @@ export class createUser1631039612322 implements MigrationInterface {
             name: 'passwordHash',
             type: 'varchar',
           },
-
+          {
+            name: 'secret',
+            type: 'varchar',
+          },
+          {
+            name: 'has_configured',
+            type: 'boolean',
+            default: false,
+          },
           {
             name: 'createdAt',
             type: 'timestamp',

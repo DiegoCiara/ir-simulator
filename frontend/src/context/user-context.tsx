@@ -6,9 +6,7 @@ import { createContext, useContext, ReactNode } from 'react';
 
 interface UserContextInterface {
   createUser: (data: User) => Promise<AxiosResponse>; // Update to accept a User argument
-  getUsers: () => Promise<AxiosResponse>;
   getUser: (id: string) => Promise<AxiosResponse>;
-  deleteUser: (id: string) => Promise<AxiosResponse>;
 }
 
 const UserContext = createContext<UserContextInterface | undefined>(undefined);
@@ -18,10 +16,6 @@ interface UserProviderProps {
 }
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  async function getUsers() {
-    const response = await api.get('/user');
-    return response;
-  }
 
   async function getUser(id: string) {
     const response = await api.get(`/user/${id}`);
@@ -33,13 +27,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     return response;
   }
 
-  async function deleteUser(id: string) {
-    const response = await api.delete(`/user/${id}`);
-    return response;
-  }
-
   return (
-    <UserContext.Provider value={{ getUsers, createUser, getUser, deleteUser }}>
+    <UserContext.Provider value={{  createUser, getUser}}>
       {children}
     </UserContext.Provider>
   );

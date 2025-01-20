@@ -3,6 +3,10 @@ import { Request, Response } from 'express';
 import Users from '@entities/User';
 import emailValidator from '@utils/emailValidator';
 import User from '@entities/User';
+import speakeasy from 'speakeasy';
+
+import qrcode from 'qrcode';
+import { generateToken } from '@utils/generateToken';
 
 interface UserInterface {
   id?: string;
@@ -10,21 +14,10 @@ interface UserInterface {
   email: string;
   token: string;
   password: string;
-  client: string;
+  secret?: string;
 }
 
 class UserController {
-  public async findUsers(req: Request, res: Response): Promise<void> {
-    try {
-      const users = await User.find({ order: { createdAt: 'DESC'} });
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(400).json({
-        error: 'Erro ao procurar usuários, tente novamente mais tarde',
-      });
-    }
-  }
-
   public async findUserById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -39,7 +32,9 @@ class UserController {
       res.status(200).json(user);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Erro ao buscar usuário, tente novamente' });
+      res
+        .status(500)
+        .json({ error: 'Erro ao buscar usuário, tente novamente' });
     }
   }
 
@@ -48,7 +43,9 @@ class UserController {
       const { name, email, password }: UserInterface = req.body;
 
       if (!email || !emailValidator(email)) {
-        res.status(400).json({ message: 'Valores inválidos para o novo usuário!' });
+        res
+          .status(400)
+          .json({ message: 'Valores inválidos para o novo usuário!' });
         return;
       }
 
@@ -61,10 +58,15 @@ class UserController {
 
       const passwordHash = await bcrypt.hash(password, 10);
 
+      const secret = speakeasy.generateSecret({
+        name: `IR Simulator: ${email}`,
+      });
+
       const user = await Users.create({
         name,
         email,
         passwordHash,
+        secret: secret.base32,
       }).save();
 
       if (!user) {
@@ -80,6 +82,7 @@ class UserController {
       res.status(400).json({ error: 'Falha no registro, tente novamente' });
     }
   }
+
 
   public async update(req: Request, res: Response): Promise<void> {
     try {
@@ -106,57 +109,6 @@ class UserController {
       await Users.update(user.id, { ...valuesToUpdate });
 
       res.status(200).json();
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Falha ao atualizar, tente novamente.' });
-    }
-  }
-
-  public async passwordUpdate(req: Request, res: Response): Promise<void> {
-    try {
-      const { oldPassword, newPassword } = req.body;
-      const id = req.params.id;
-
-      if (!oldPassword || !newPassword) {
-        res.status(400).json({ message: 'Valores inválidos para atualizar a senha' });
-        return;
-      }
-
-      const user = await Users.findOneOrFail(id);
-
-      if (!(await bcrypt.compare(oldPassword, user.passwordHash))) {
-        res.status(404).json({ message: 'Senha inválida' });
-        return;
-      }
-
-      const passwordHash = await bcrypt.hash(newPassword, 10);
-
-      await Users.update(id, { passwordHash });
-
-      res.status(200).json({ message: 'Usuário atualizado com sucesso'});
-    } catch (error) {
-      res.status(400).json({
-        error: 'Falha ao atualizar a senha, verifique os valores e tente novamente',
-      });
-    }
-  }
-
-
-  public async delete(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-
-
-      const user = await Users.findOne(id);
-
-      if (!user) {
-        res.status(404).json({ message: 'Usuário não encontrado.' });
-        return;
-      }
-
-      await Users.softRemove(user);
-
-      res.status(200).json({ message: 'Usuário deletado com sucesso'});
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Falha ao atualizar, tente novamente.' });

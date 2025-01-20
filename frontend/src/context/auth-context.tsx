@@ -1,14 +1,29 @@
-import  { useState, createContext, useEffect, useContext, ReactNode } from "react";
-import { User } from "../types/User";
-import { api } from "../api/api";
-import { toast } from "react-toastify";
+import {
+  useState,
+  createContext,
+  useEffect,
+  useContext,
+  ReactNode,
+} from 'react';
+import { User } from '../types/User';
+import { api } from '../api/api';
+import { toast } from 'react-toastify';
+import { AxiosResponse } from 'axios';
 
 interface AuthContextInterface {
   token: string;
   signIn: (myToken: string, user: User) => void;
   login: (email: string, password: string) => Promise<any>;
-  editUserPassword: (userId: string, data: { password: string; confirmPassword: string }) => Promise<void>;
+  editUserPassword: (
+    userId: string,
+    data: { password: string; confirmPassword: string },
+  ) => Promise<void>;
   signOut: () => void;
+  verifySecret: (data: {
+    email: string;
+    secret: string;
+  }) => Promise<AxiosResponse>; // Update to accept a User argument
+  get2FaQrCode: (email: string) => Promise<AxiosResponse>;
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   api: typeof api;
@@ -16,9 +31,8 @@ interface AuthContextInterface {
 
 const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
 
-
-interface AuthProviderInterface{
-  children: ReactNode
+interface AuthProviderInterface {
+  children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderInterface) => {
@@ -30,8 +44,10 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
   });
 
   useEffect(() => {
-    const storagedToken: string | null = sessionStorage.getItem("@ir-simulator:token");
-    const storagedUser = sessionStorage.getItem("@ir-simulator:user");
+    const storagedToken: string | null = sessionStorage.getItem(
+      '@ir-simulator:token',
+    );
+    const storagedUser = sessionStorage.getItem('@ir-simulator:user');
 
     if (storagedToken && storagedUser) {
       setToken(storagedToken);
@@ -39,45 +55,46 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
     }
   }, []);
 
-
-  const signIn = async (myToken: string, user: User ) => {
+  const signIn = async (myToken: string, user: User) => {
     const userStringfy = JSON.stringify(user);
     setToken(myToken);
     setUser(user);
-    sessionStorage.setItem("@ir-simulator:user", userStringfy);
-    sessionStorage.setItem("@ir-simulator:token", myToken);
+    sessionStorage.setItem('@ir-simulator:user', userStringfy);
+    sessionStorage.setItem('@ir-simulator:token', myToken);
   };
 
   const signOut = () => {
     setToken('');
-    sessionStorage.removeItem("@ir-simulator:user");
-    sessionStorage.removeItem("@ir-simulator:token");
+    sessionStorage.removeItem('@ir-simulator:user');
+    sessionStorage.removeItem('@ir-simulator:token');
   };
 
   async function login(email: string, password: string) {
-      try {
-        const response = await api.post("/auth/authenticate", { email, password });
-        if (response.status === 200) {
-          signIn(response.data.token, response.data);
-        }
-        return response
-      } catch (error: any) {
-        console.error(error)
-        toast.error(error?.response?.data?.message)
-      }
+    const response = await api.post('/auth/authenticate', { email, password });
+    return response;
   }
 
-  const editUserPassword = async (userId: string, data: { password: string, confirmPassword: string}) => {
+  const editUserPassword = async (
+    userId: string,
+    data: { password: string; confirmPassword: string },
+  ) => {
     try {
       await api.put(`/user/${userId}/update-password/${userId}`, data);
-
       return;
     } catch (error) {
-      console.error(error)
+      console.error(error);
       return;
     }
   };
 
+  async function get2FaQrCode(email: string) {
+    const response = await api.get(`/auth/2fa-code/${email}`);
+    return response;
+  }
+  async function verifySecret(data: { email: string; secret: string }) {
+    const response = await api.post('/auth/verify-secret', data);
+    return response;
+  }
 
   return (
     <AuthContext.Provider
@@ -90,6 +107,8 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
         user,
         setUser,
         api,
+        get2FaQrCode,
+        verifySecret,
       }}
     >
       {children}
@@ -102,7 +121,7 @@ export default AuthContext;
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

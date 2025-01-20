@@ -17,6 +17,8 @@
     "build": "npx tsc && tsc-alias"
   },
   "dependencies": {
+    "@types/qrcode": "^1.5.5",
+    "@types/speakeasy": "^2.0.10",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -26,6 +28,8 @@
     "nodemailer": "^6.9.16",
     "nodemailer-express-handlebars": "^7.0.0",
     "pg": "^8.7.1",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
     "tsc-alias": "^1.8.8",
     "typeorm": "0.2.37",
     "typeorm-express-query-builder": "^1.5.0",
