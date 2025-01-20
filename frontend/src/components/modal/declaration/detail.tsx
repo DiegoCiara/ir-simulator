@@ -18,17 +18,20 @@ import { formatCurrency } from '@/utils/formats';
 import UpdateDeclarationModal from './update';
 import SubmitDeclarationModal from './submited';
 import { useNavigate } from 'react-router-dom';
+import DeleteDeclarationModal from './delete';
 
 interface DetailDeclarationModalProps {
   id: string;
   open: boolean;
   close: () => void;
+  getData: () => void;
 }
 
 export default function DetailDeclarationModal({
   id,
   open,
   close,
+  getData,
 }: DetailDeclarationModalProps) {
   const defaultData = {
     year: '',
@@ -43,6 +46,7 @@ export default function DetailDeclarationModal({
   const [data, setData] = useState<Declaration>(defaultData);
   const [updateModal, setUpdateModal] = useState<boolean>(false);
   const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const { getDeclaration } = useDeclaration();
 
   async function fetchDeclaration() {
@@ -54,7 +58,7 @@ export default function DetailDeclarationModal({
       console.error(error);
       toast.error(
         error.response.data.message ||
-          'Não foi possível buscar os usuários tente novamente.',
+          'Não foi possível buscar os dados da declaração, tente novamente.',
       );
     } finally {
       await offLoading();
@@ -76,6 +80,10 @@ export default function DetailDeclarationModal({
     setSubmitModal(!submitModal);
   }
 
+  function controlDelete() {
+    setDeleteModal(!deleteModal);
+  }
+
   return (
     <ModalContainer open={open} close={close}>
       {id && updateModal && (
@@ -95,11 +103,23 @@ export default function DetailDeclarationModal({
           getData={fetchDeclaration}
         />
       )}
+
+      {id && deleteModal && (
+        <DeleteDeclarationModal
+          id={id}
+          open={deleteModal}
+          close={controlDelete}
+          getData={async () =>{
+            await getData()
+            await close()
+          }}
+        />
+      )}
       <Card className="card-modal">
         <CardHeader>
-          <CardTitle>Detalhes do usuário</CardTitle>
+          <CardTitle>Detalhes da declaração</CardTitle>
           <CardDescription>
-            Veja abaixo os detalhes da conta do usuário.
+            Veja abaixo os detalhes da conta da declaração.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -119,7 +139,7 @@ export default function DetailDeclarationModal({
             <strong>{formatCurrency(data.values.deduction.toString())}</strong>
           </div>
         </CardContent>
-        <CardFooter className="gap-10">
+        <CardFooter className="gap-2 flex flex-col">
           {data.status === 'UNSUBMITED' ? (
             <>
               <Button
@@ -137,6 +157,14 @@ export default function DetailDeclarationModal({
                 onClick={() => controlSubmit()}
               >
                 Submeter
+              </Button>
+              <Button
+                className="w-full"
+                variant={'destructive'}
+                type="submit"
+                onClick={() => controlDelete()}
+              >
+                Remover
               </Button>
             </>
           ) : (

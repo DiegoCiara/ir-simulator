@@ -146,7 +146,7 @@ export default function UpdateDeclarationModal({
       console.error(error);
       toast.error(
         error.response.data.message ||
-          'Não foi possível buscar os usuários tente novamente.',
+          'Não foi possível buscar os dados da declaração tente novamente.',
       );
     } finally {
       await offLoading();

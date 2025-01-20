@@ -87,7 +87,7 @@ export default function CreateDeclaration() {
       console.error(error);
       toast.error(
         error?.response?.data?.message ||
-          'Não foi possível buscar os usuários tente novamente.',
+          'Não foi possível criar a declaração, tente novamente.',
       );
     } finally {
       await offLoading();

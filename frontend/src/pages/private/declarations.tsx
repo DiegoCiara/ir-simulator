@@ -119,7 +119,7 @@ export default function Declarations() {
       console.error(error);
       toast.error(
         error?.response?.data?.message ||
-          'Não foi possível buscar os usuários tente novamente.',
+          'Não foi possível buscar as declarações tente novamente.',
       );
     } finally {
       await offLoading();
@@ -455,6 +455,7 @@ export default function Declarations() {
           id={id}
           open={detailModal}
           close={closeDetailModal}
+          getData={fetchDeclarations}
         />
       )}
       {submitId && (
