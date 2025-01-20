@@ -5,11 +5,11 @@ import { AxiosResponse } from 'axios';
 import { createContext, useContext, ReactNode } from 'react';
 
 interface DeclarationContextInterface {
-  createDeclaration: (data: Declaration) => Promise<AxiosResponse>; // Update to accept a Declaration argument
+  createDeclaration: (data: Declaration) => Promise<AxiosResponse>; 
   rectifiedDeclaration: (
     id: string,
     data: Declaration,
-  ) => Promise<AxiosResponse>; // Update to accept a Declaration argument
+  ) => Promise<AxiosResponse>;
   getDeclarations: () => Promise<AxiosResponse>;
   getDeclaration: (id: string) => Promise<AxiosResponse>;
   deleteDeclaration: (id: string) => Promise<AxiosResponse>;

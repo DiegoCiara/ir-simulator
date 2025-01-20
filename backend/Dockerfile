@@ -4,7 +4,7 @@ WORKDIR /usr/app
 
 COPY package*.json ./
 
-run npm install
+RUN yarn install
 
 COPY . .
 
@@ -12,4 +12,4 @@ ARG CLIENT_PORT
 
 EXPOSE ${CLIENT_PORT}
 
-CMD ['npm', 'dev']
+CMD ["yarn", "dev"]

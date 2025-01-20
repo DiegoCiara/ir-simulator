@@ -44,7 +44,6 @@ export default function QrCode2Fa() {
     } finally {
       await offLoading();
     }
-    // setLoading(false)
   };
 
 

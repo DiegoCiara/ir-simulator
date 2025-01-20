@@ -17,7 +17,7 @@ interface AuthContextInterface {
   verifySecret: (data: {
     email: string;
     secret: string;
-  }) => Promise<AxiosResponse>; // Update to accept a User argument
+  }) => Promise<AxiosResponse>;
   get2FaQrCode: (email: string) => Promise<AxiosResponse>;
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User>>;

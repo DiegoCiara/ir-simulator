@@ -43,6 +43,7 @@ import { SelectInput } from '@/components/select-input/select-input';
 import { Label } from '@/components/ui/label';
 import UpdateDeclarationModal from '@/components/modal/declaration/update';
 import { Badge } from '@/components/ui/badge';
+import { yearsDeclaration } from '@/utils/mock';
 
 export default function Declarations() {
   const { onLoading, offLoading } = useLoading();
@@ -353,23 +354,20 @@ export default function Declarations() {
       ],
     },
   ];
-  const optionsYears = [
-    {
-      title: 'Anos',
-      items: Array.from(new Set(data.map((e) => e.year))).map((year) => ({
-        label: year,
-        value: year,
-      })),
-    },
-  ];
 
   const optionsStatus = [
     {
       title: 'Status',
-      items: Array.from(new Set(data.map((e) => e.status!))).map((status) => ({
-        label: formatStatus(status),
-        value: status,
-      })),
+      items: [
+        {
+          label: 'SUBMITED',
+          value: 'SUBMITED',
+        },
+        {
+          label: 'UNSUBMITED',
+          value: 'UNSUBMITED',
+        },
+      ],
     },
   ];
 
@@ -388,7 +386,7 @@ export default function Declarations() {
           <div className="min-w-52 sm:min-w-[300px] relative">
             <Label className="text-[12px] text-muted-foreground">Filtro</Label>
             <SelectInput
-              options={optionsYears}
+              options={yearsDeclaration}
               placeholder={`Filtre por ano`}
               value={String(
                 table.getColumn(typeFilter)?.getFilterValue() ?? '',
@@ -399,11 +397,11 @@ export default function Declarations() {
             />
             {columnFilters.length > 0 && (
               <Badge
-                variant='secondary'
-                className='p-0 absolute top-8 right-10 text-sm cursor-pointer'
+                variant="secondary"
+                className="p-0 absolute top-8 right-10 text-sm cursor-pointer"
                 onClick={() => clearAllFilters()}
               >
-                <CircleX height={18}/>
+                <CircleX height={18} />
               </Badge>
             )}
           </div>
@@ -425,11 +423,11 @@ export default function Declarations() {
             />
             {columnFilters.length > 0 && (
               <Badge
-                variant='secondary'
-                className='p-0 absolute top-8 right-10 text-sm cursor-pointer'
+                variant="secondary"
+                className="p-0 absolute top-8 right-10 text-sm cursor-pointer"
                 onClick={() => clearAllFilters()}
               >
-                <CircleX height={18}/>
+                <CircleX height={18} />
               </Badge>
             )}
           </div>
@@ -505,7 +503,10 @@ export default function Declarations() {
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => {
                         return (
-                          <TableHead key={header.id}>
+                          <TableHead
+                            key={header.id}
+                            className="min-w-[170px] sm:min-w-[30px]"
+                          >
                             {header.isPlaceholder
                               ? null
                               : flexRender(
@@ -542,7 +543,7 @@ export default function Declarations() {
                     <TableRow>
                       <TableCell
                         colSpan={columns.length}
-                        className="h-12 text-center"
+                        className="h-12 text-start sm:text-center"
                       >
                         Sem resultados.
                       </TableCell>

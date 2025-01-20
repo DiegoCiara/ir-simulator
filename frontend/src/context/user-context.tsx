@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios';
 import { createContext, useContext, ReactNode } from 'react';
 
 interface UserContextInterface {
-  createUser: (data: User) => Promise<AxiosResponse>; // Update to accept a User argument
+  createUser: (data: User) => Promise<AxiosResponse>;
   getUser: (id: string) => Promise<AxiosResponse>;
 }
 

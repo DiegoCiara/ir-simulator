@@ -50,7 +50,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 
 routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-routes.use('/auth', AuthRoutes);
+routes.use('/auth/', AuthRoutes);
 routes.use('/user/', UserRoutes);
 routes.use('/declaration/', DeclarationRoutes);
 

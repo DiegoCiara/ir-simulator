@@ -4,14 +4,13 @@ import PrivateRoute from './private.routes.tsx';
 import { useTheme } from '@/context/theme-context.tsx';
 import { ToastContainer } from 'react-toastify';
 import { Navbar } from '@/components/navbar/navbar.tsx';
-import Account from '@/pages/private/account.tsx';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from '@/components/navbar/app-sidebar/app-sidebar.tsx';
 import Declarations from '@/pages/private/declarations.tsx';
 import CreateDeclaration from '@/pages/private/create-declaration.tsx';
 import SignUp from '@/pages/public/signup.tsx';
-import QrCode2Fa from '@/pages/public/2fa-qrcode.tsx';
-import Otp from '@/pages/public/otp.tsx';
+import QrCode2Fa from '@/pages/public/2fa-otp-qrcode.tsx';
+import Otp from '@/pages/public/2fa-otp.tsx';
 import RectifiedDeclaration from '@/pages/private/rectified-declaration.tsx';
 
 export const AppRoute = () => {
@@ -29,10 +28,6 @@ export const AppRoute = () => {
     {
       path: '/declarations/retification/:id',
       component: RectifiedDeclaration,
-    },
-    {
-      path: '/account',
-      component: Account,
     },
   ];
 

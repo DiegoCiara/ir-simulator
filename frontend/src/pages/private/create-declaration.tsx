@@ -53,6 +53,8 @@ export default function CreateDeclaration() {
       ...prevErrors,
       [fieldName]: errorMessage,
     }));
+
+    return errorMessage.length === 0
   };
 
   const validateFields = () => {
