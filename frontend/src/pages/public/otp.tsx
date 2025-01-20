@@ -33,7 +33,7 @@ export default function Otp() {
       e.preventDefault();
       const response = await verifySecret({ email: email!, secret });
       console.log(response);
-      if (response.status === 201) {
+      if (response.status === 200) {
         await signIn(response.data.token, response.data.user);
         await navigate('/declarations');
       }

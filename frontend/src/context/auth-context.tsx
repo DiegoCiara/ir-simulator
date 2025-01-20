@@ -13,10 +13,6 @@ interface AuthContextInterface {
   token: string;
   signIn: (myToken: string, user: User) => void;
   login: (email: string, password: string) => Promise<any>;
-  editUserPassword: (
-    userId: string,
-    data: { password: string; confirmPassword: string },
-  ) => Promise<void>;
   signOut: () => void;
   verifySecret: (data: {
     email: string;
@@ -69,29 +65,16 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
   };
 
   async function login(email: string, password: string) {
-    const response = await api.post('/auth/authenticate', { email, password });
+    const response = await api.post('/auth/', { email, password });
     return response;
   }
 
-  const editUserPassword = async (
-    userId: string,
-    data: { password: string; confirmPassword: string },
-  ) => {
-    try {
-      await api.put(`/user/${userId}/update-password/${userId}`, data);
-      return;
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-  };
-
   async function get2FaQrCode(email: string) {
-    const response = await api.get(`/auth/2fa-code/${email}`);
+    const response = await api.get(`/auth/2fa/${email}`);
     return response;
   }
   async function verifySecret(data: { email: string; secret: string }) {
-    const response = await api.post('/auth/verify-secret', data);
+    const response = await api.post('/auth/2fa/verify', data);
     return response;
   }
 
@@ -101,7 +84,6 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
         token,
         signIn,
         login,
-        editUserPassword,
         signOut,
         user,
         setUser,

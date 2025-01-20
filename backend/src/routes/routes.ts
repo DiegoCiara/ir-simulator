@@ -8,7 +8,7 @@ import swaggerUi from 'swagger-ui-express'
 
 const routes = Router();
 
-const base = { 'API Simulador IR': 'Online' }
+const base = { 'API IR Simulator': 'Online' }
 
 routes.get('/', (req, res) => {
   res.json(base);
@@ -19,19 +19,33 @@ const swaggerOptions = {
   definition: {
       openapi: '3.0.0',
       info: {
-          title: 'Minha API',
+          title: 'API IR Simulator',
           version: '1.0.0',
           description: 'Documentação da API',
       },
       servers: [
         {
-          url: 'http://localhost:3000', // Alterar conforme necessário
+          url: 'http://localhost:3333',
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      security: [
+        {
+          bearerAuth: [],
         },
       ],
     },
-    apis: ['./src/app/controllers/*.ts', './src/app/routes/*.ts'], // Caminho dos arquivos
+    apis: ['./src/app/controllers/*.ts', './src/app/routes/*.ts'],
   };
-  
+
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 

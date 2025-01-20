@@ -2,9 +2,7 @@ import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import Users from '@entities/User';
 import emailValidator from '@utils/emailValidator';
-import User from '@entities/User';
 import speakeasy from 'speakeasy';
-
 import qrcode from 'qrcode';
 import { generateToken } from '@utils/generateToken';
 
@@ -18,21 +16,43 @@ interface UserInterface {
 }
 
 class UserController {
+  /**
+   * @swagger
+   * /user/{id}:
+   *   get:
+   *     summary: Retorna o usuário procurado pelo ID
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         description: ID do usuário
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Usuário encontrado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: string
+   *                 name:
+   *                   type: string
+   *                 email:
+   *                   type: string
+   *       404:
+   *         description: Usuário não encontrado
+   *       500:
+   *         description: Erro interno
+   */
   public async findUserById(req: Request, res: Response): Promise<void> {
     try {
-      /**
-       * @swagger
-       * /user/:id:
-       *   get:
-       *     summary: Retorna o usuário procurado pelo id
-       *     responses:
-       *       200:
-       *         description: Consulta de usuário por ID
-       */
-
       const { id } = req.params;
-
-      const user = await Users.findOne(id);
+      const user = await Users.findOne(id, {
+        select: ['id', 'name', 'email', 'createdAt', 'has_configured'],
+      });
 
       if (!user) {
         res.status(404).json({ message: 'Usuário não encontrado.' });
@@ -48,6 +68,41 @@ class UserController {
     }
   }
 
+  /**
+   * @swagger
+   * /user:
+   *   post:
+   *     summary: Cria um novo usuário
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               name:
+   *                 type: string
+   *               email:
+   *                 type: string
+   *               password:
+   *                 type: string
+   *     responses:
+   *       201:
+   *         description: Usuário criado com sucesso
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: string
+   *       400:
+   *         description: Valores inválidos para o novo usuário
+   *       409:
+   *         description: Usuário já existe
+   *       500:
+   *         description: Erro interno ao criar o usuário
+   */
   public async create(req: Request, res: Response): Promise<void> {
     try {
       const { name, email, password }: UserInterface = req.body;
@@ -62,7 +117,7 @@ class UserController {
       const findUser = await Users.findOne({ where: { email } });
 
       if (findUser) {
-        res.status(409).json({ message: 'Usuário já existe.' }); // 409: Conflito
+        res.status(409).json({ message: 'Usuário já existe.' });
         return;
       }
 
@@ -95,6 +150,39 @@ class UserController {
     }
   }
 
+  /**
+   * @swagger
+   * /user/{id}:
+   *   put:
+   *     summary: Atualiza os dados de um usuário
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         description: ID do usuário a ser atualizado
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               name:
+   *                 type: string
+   *               email:
+   *                 type: string
+   *     responses:
+   *       204:
+   *         description: Usuário atualizado com sucesso
+   *       400:
+   *         description: Formato de e-mail inválido
+   *       404:
+   *         description: Usuário não encontrado
+   *       500:
+   *         description: Erro interno ao atualizar o usuário
+   */
   public async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -119,7 +207,7 @@ class UserController {
 
       await Users.update(user.id, { ...valuesToUpdate });
 
-      res.status(204).send(); // 204: No Content
+      res.status(204).send();
     } catch (error) {
       console.error(error);
       res.status(500).json({

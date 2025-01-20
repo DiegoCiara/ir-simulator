@@ -3,8 +3,8 @@ import Router from 'express';
 
 const routes = Router();
 
-routes.post('/authenticate', AuthController.authenticate);
-routes.get('/2fa-code/:email', AuthController.get2FaQrCode);
-routes.post('/verify-secret', AuthController.verifySecret);
+routes.post('/', AuthController.authenticate);
+routes.get('/2fa/:email', AuthController.get2FaQrCode);
+routes.post('/2fa/verify', AuthController.verifySecret);
 
 export default routes;
