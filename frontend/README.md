@@ -1,50 +1,11 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Rodando o Front-end:
+O front-end foi desenvolvido utilizando React.js com Typescript, TailwindCSS, Shadcn UI para estilização de componentes e Material UI para criação de modais. O projeto também utiliza o React Router Dom e Axios.
 
-Currently, two official plugins are available:
+   - Acesse o diretório do projeto do backend: `cd frontend`;
+   - Crie as variáveis de ambiente, copiando o conteúdo do arquivo `.env.example` e cole no arquivo `.env` na raiz do projeto: `cp .env.example .env`;
+   - Instale os pacotes: `yarn` ou `yarn install`;
+   - Rode a aplicação com: `yarn dev`;
+   - Ao terminar, a aplicação estará disponíve na porta padrão, em `http://localhost:5173`;
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+O front-end atende todos os requisitos obrigatórios do projeto.

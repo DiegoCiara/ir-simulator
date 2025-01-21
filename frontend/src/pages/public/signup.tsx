@@ -94,10 +94,11 @@ export default function SignUp() {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="email" className="">
+              <Label htmlFor="password" className="">
                 Senha
               </Label>
               <Input
+                type="pass"
                 id="password"
                 placeholder="••••••••"
                 autoFocus

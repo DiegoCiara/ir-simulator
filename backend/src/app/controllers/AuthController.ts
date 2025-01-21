@@ -156,7 +156,7 @@ class AuthController {
    * @swagger
    * /auth/2fa/verify:
    *   post:
-   *     summary: Verifica o token da autenticação de dois fatores e retorna o token da sessão
+   *     summary: Verifica o token da autenticação de dois fatores e retorna o token da sessão (Aqui obtém o token de autenticação da sessão)
    *     tags: [Autenticação]
    *     requestBody:
    *       required: true
