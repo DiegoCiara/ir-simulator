@@ -8,7 +8,7 @@ Siga os passos abaixo na ordem para o melhor êxito ao executar o projeto.
    - Instale os pacotes da aplicação: `yarn` ou `yarn install`;
    - Suba o container da aplicação: `docker compose up -d`;
    - Rode as migrations para criar as tabelas com o TypeORM: `yarn typeorm migration:run`;
-   - Sincronize as tabelas: `yarn typeorm schema:scync`;
+   - Sincronize as tabelas: `yarn typeorm schema:sync`;
    - Ao terminar, a aplicação estará disponíve em `http://localhost:3333`.
 
 O back-end atende todos os requisitos obrigatórios do projeto e um diferencial (Docker).

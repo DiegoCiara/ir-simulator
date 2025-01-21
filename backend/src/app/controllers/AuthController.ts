@@ -233,7 +233,7 @@ class AuthController {
         console.log(verified);
         res
           .status(401)
-          .json({ error: 'Falha na verificação, tente novamente.' });
+          .json({ message: 'Código inválido, verifique o código informado.' });
       }
     } catch (error) {
       console.error(error);

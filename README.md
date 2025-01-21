@@ -12,13 +12,13 @@ O back-end dessa aplicação é uma API RESTful desenvolvida em Node.js com Type
    - Instale os pacotes da aplicação: `yarn` ou `yarn install`;
    - Suba o container da aplicação: `docker compose up -d`;
    - Rode as migrations para criar as tabelas com o TypeORM: `yarn typeorm migration:run`;
-   - Sincronize as tabelas: `yarn typeorm schema:scync`;
-   - Ao terminar, a aplicação estará disponíve em `http://localhost:3333`.
+   - Sincronize as tabelas: `yarn typeorm schema:sync`;
+   - Ao terminar esta configuração, a aplicação estará disponíve em `http://localhost:3333`.
 
 O back-end atende todos os requisitos obrigatórios do projeto e um diferencial (Docker).
 
 ### 2. Rodando o Front-end:
-O front-end foi desenvolvido utilizando React.js com Typescript, TailwindCSS, Shadcn UI para estilização de componentes e Material UI para criação de modais. O projeto também utiliza o React Router Dom e Axios.
+O front-end foi desenvolvido utilizando React.js com Typescript, TailwindCSS, Shadcn UI para estilização de componentes e Material UI para criação de modais. O projeto também utiliza o React Router Dom para rotas e Axios para requisições de API.
 
    - Acesse o diretório do projeto do backend: `cd frontend`;
    - Crie as variáveis de ambiente, copiando o conteúdo do arquivo `.env.example` e cole no arquivo `.env` na raiz do projeto: `cp .env.example .env`;

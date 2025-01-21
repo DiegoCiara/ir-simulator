@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/input-otp';
 import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Otp() {
   const { onLoading, offLoading } = useLoading();
@@ -39,6 +41,12 @@ export default function Otp() {
       }
     } catch (error) {
       console.error(error);
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -61,9 +69,10 @@ export default function Otp() {
                 maxLength={6}
                 value={secret}
                 onChange={(e) => setSecret(e)}
+                autoFocus
               >
                 <InputOTPGroup>
-                  <InputOTPSlot index={0}/>
+                  <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
                   <InputOTPSlot index={2} />
                 </InputOTPGroup>

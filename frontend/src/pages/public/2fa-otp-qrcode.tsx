@@ -42,6 +42,12 @@ export default function QrCode2Fa() {
       }
     } catch (error) {
       console.error(error);
+      if (error instanceof AxiosError) {
+        console.error(error);
+        return toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        );
+      }
     } finally {
       await offLoading();
     }
@@ -97,6 +103,7 @@ export default function QrCode2Fa() {
                 maxLength={6}
                 value={secret}
                 onChange={(e) => setSecret(e)}
+                autoFocus
               >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
