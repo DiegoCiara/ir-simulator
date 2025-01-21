@@ -14,6 +14,7 @@ routes.get('/', (req, res) => {
   res.json(base);
 });
 
+const port = process.env.CLIENT_PORT
 
 const swaggerOptions = {
   definition: {
@@ -25,7 +26,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://localhost:3333',
+          url: `http://localhost:${port}`,
         },
       ],
       components: {
