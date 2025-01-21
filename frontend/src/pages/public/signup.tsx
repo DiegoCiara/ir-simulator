@@ -98,7 +98,7 @@ export default function SignUp() {
                 Senha
               </Label>
               <Input
-                type="pass"
+                type="password"
                 id="password"
                 placeholder="••••••••"
                 autoFocus
